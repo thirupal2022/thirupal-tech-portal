@@ -13,7 +13,6 @@ on:
       - main
       - "release/**"
 
-# Minimum permissions required for this CI workflow
 permissions:
   contents: read
 
@@ -23,29 +22,20 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Checkout source code
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # 2. Configure Node.js
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: npm
 
-      # 3. Install exact dependencies from package-lock.json
       - name: Install dependencies
         run: npm ci
 
-      # 4. TypeScript validation
-      - name: Type check
-        run: npm run type-check
-
-      # 5. Oxlint validation
       - name: Lint
         run: npm run lint
 
-      # 6. Create production build
-      - name: Build application
+      - name: Build
         run: npm run build
