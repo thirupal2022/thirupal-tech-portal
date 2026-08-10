@@ -100,18 +100,7 @@ export default function ContactPage() {
               </button>
             </form>
 
-            <div>
-              <h3 className="text-2xl font-bold mb-6">
-                Get In Touch
-              </h3>
-
-              <div className="space-y-4">
-                <p>Email: your-email@example.com</p>
-                <p>Location: India</p>
-                <p>LinkedIn: /in/thirupalreddy</p>
-                <p>GitHub: github.com/thirupaltech</p>
-              </div>
-            </div>
+            
 
           </div>
 
