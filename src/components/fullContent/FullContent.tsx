@@ -44,12 +44,14 @@ interface InitiativeItem {
   color: string;
 }
 
+/*
 interface TechHubItem {
   title: string;
   icon: string;
   items: string[];
   accentColor: string;
 }
+*/
 
 interface Milestone {
   year: string;
@@ -224,8 +226,8 @@ export default function FullContent(): React.JSX.Element {
   const [formFeedback, setFormFeedback] = useState<FormFeedback | null>(null);
 
   // Newsletter state
-  const [newsletterEmail, setNewsletterEmail] = useState<string>('');
-  const [newsletterFeedback, setNewsletterFeedback] = useState<string | null>(null);
+  //const [newsletterEmail, setNewsletterEmail] = useState<string>('');
+  //const [newsletterFeedback, setNewsletterFeedback] = useState<string | null>(null);
 
   // Auto scroll to top on tab changes
   useEffect(() => {
@@ -243,6 +245,7 @@ export default function FullContent(): React.JSX.Element {
     setTimeout(() => setFormFeedback(null), 5000);
   };
 
+  /*
   const handleNewsletterSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
     if (!newsletterEmail) return;
@@ -250,6 +253,7 @@ export default function FullContent(): React.JSX.Element {
     setNewsletterEmail('');
     setTimeout(() => setNewsletterFeedback(null), 4000);
   };
+  */
 
   const handleReadBlog = (id: string): void => {
     setSelectedBlogId(id);
@@ -1173,7 +1177,7 @@ export default function FullContent(): React.JSX.Element {
                       </div>
                       <div className="text-xs">
                         <p className="font-bold text-slate-400">Email Address</p>
-                        <p className={`font-semibold ${darkMode ? 'text-white' : 'text-slate-900'}`}>thirupaltech@gmail.com</p>
+                        <p className={`font-semibold ${darkMode ? 'text-white' : 'text-slate-900'}`}>thirupalanguru@gmail.com</p>
                       </div>
                     </div>
 
@@ -1183,59 +1187,17 @@ export default function FullContent(): React.JSX.Element {
                       </div>
                       <div className="text-xs">
                         <p className="font-bold text-slate-400">Location</p>
-                        <p className={`font-semibold ${darkMode ? 'text-white' : 'text-slate-900'}`}>Telangana, India 🇮🇳</p>
+                        <p className={`font-semibold ${darkMode ? 'text-white' : 'text-slate-900'}`}>Andra Pradesh, India 🇮🇳</p>
                       </div>
                     </div>
                   </div>
 
                   {/* Social Handles */}
-                  <div className="pt-4 border-t border-slate-800 space-y-3">
-                    <p className="text-[10px] font-bold uppercase text-slate-500">Professional Networks</p>
-                    <div className="space-y-2">
-                      <a href="#linkedin" className="flex items-center justify-between text-xs text-slate-400 hover:text-white transition-colors">
-                        <span>LinkedIn</span>
-                        <span className="text-emerald-500 font-mono">/in/thirupalreddy</span>
-                      </a>
-                      <a href="#github" className="flex items-center justify-between text-xs text-slate-400 hover:text-white transition-colors">
-                        <span>GitHub</span>
-                        <span className="text-emerald-500 font-mono">/thirupaltech</span>
-                      </a>
-                    </div>
-                  </div>
+                  
                 </div>
 
                 {/* Direct Subscription Widget */}
-                <div className={`p-6 rounded-2xl border ${
-                  darkMode ? 'bg-emerald-950/20 border-emerald-500/20' : 'bg-emerald-50 border-emerald-500/10 shadow-sm'
-                } space-y-4`}>
-                  <h4 className="text-sm font-extrabold text-emerald-400">Subscribe to Newsletter</h4>
-                  <p className="text-xs text-slate-400 leading-relaxed">
-                    Get the latest community coding tutorials, AWS automation sheets, and direct village updates sent straight to your inbox.
-                  </p>
-                  
-                  {newsletterFeedback && (
-                    <p className="text-xs text-emerald-400 font-semibold">{newsletterFeedback}</p>
-                  )}
-
-                  <form onSubmit={handleNewsletterSubmit} className="flex gap-2">
-                    <input 
-                      type="email" 
-                      required
-                      placeholder="Enter your email" 
-                      value={newsletterEmail}
-                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewsletterEmail(e.target.value)}
-                      className={`text-xs rounded-lg p-2.5 flex-1 focus:outline-none focus:ring-1 focus:ring-emerald-500 ${
-                        darkMode ? 'bg-slate-950 border-slate-800 text-white' : 'bg-white border-slate-300 text-slate-950'
-                      }`}
-                    />
-                    <button 
-                      type="submit"
-                      className="bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold px-4 rounded-lg text-xs"
-                    >
-                      Subscribe
-                    </button>
-                  </form>
-                </div>
+                
 
               </div>
 
