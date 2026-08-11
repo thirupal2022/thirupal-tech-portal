@@ -29,7 +29,7 @@ export default function HeroSection() {
           >
             Technology for Communities.
             <br />
-            Innovation for Villages.
+            Innovation for Villages ...
           </h1>
 
           <p
