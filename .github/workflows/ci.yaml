@@ -45,6 +45,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: validate
 
+    # Deploy only after a push/merge to main
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
 
     permissions:
@@ -66,28 +67,52 @@ jobs:
 
       - name: Show deployment information
         run: |
+          echo "========================================"
           echo "Commit being deployed:"
           git rev-parse HEAD
 
+          echo "========================================"
           echo "Latest commit:"
           git log -1 --oneline
+
+          echo "========================================"
+          echo "Branch:"
+          git branch --show-current
 
       - name: Build React application
         run: npm run build
 
       - name: Verify build output
         run: |
+          echo "========================================"
           echo "Generated files:"
           find dist -maxdepth 2 -type f
 
+          echo "========================================"
           echo "Generated index.html:"
           cat dist/index.html
+
+          echo "========================================"
+          echo "JavaScript checksums:"
+          sha256sum dist/assets/*.js
+
+          echo "========================================"
+          echo "CSS checksums:"
+          sha256sum dist/assets/*.css
+
+          echo "========================================"
+          echo "Build directory size:"
+          du -sh dist
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
           aws-region: ap-south-2
+
+      - name: Verify AWS identity
+        run: |
+          aws sts get-caller-identity
 
       - name: Deploy to S3
         run: |
@@ -98,3 +123,11 @@ jobs:
           aws cloudfront create-invalidation \
             --distribution-id E3KFKF0AOZ0SBW \
             --paths "/*"
+
+      - name: Deployment completed
+        run: |
+          echo "========================================"
+          echo "Deployment completed successfully"
+          echo "S3 bucket: s3://thirupaltech.com"
+          echo "CloudFront distribution: E3KFKF0AOZ0SBW"
+          echo "========================================"
