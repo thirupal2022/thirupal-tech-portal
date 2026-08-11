@@ -27,7 +27,7 @@ export default function HeroSection() {
             leading-tight
             "
           >
-            Technology for Communities.
+            Technology for Communities...
             <br />
             Innovation for Villages ...
           </h1>
