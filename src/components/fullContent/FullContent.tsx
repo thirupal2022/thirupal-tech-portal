@@ -225,6 +225,7 @@ export default function FullContent(): React.JSX.Element {
   const [contactForm, setContactForm] = useState<ContactForm>({ name: '', email: '', subject: '', message: '' });
   const [formFeedback, setFormFeedback] = useState<FormFeedback | null>(null);
 
+
   // Newsletter state
   //const [newsletterEmail, setNewsletterEmail] = useState<string>('');
   //const [newsletterFeedback, setNewsletterFeedback] = useState<string | null>(null);
@@ -244,6 +245,7 @@ export default function FullContent(): React.JSX.Element {
     setContactForm({ name: '', email: '', subject: '', message: '' });
     setTimeout(() => setFormFeedback(null), 5000);
   };
+  
 
   /*
   const handleNewsletterSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
