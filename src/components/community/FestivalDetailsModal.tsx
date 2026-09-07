@@ -1,35 +1,66 @@
-import React from "react";
+import React, { useEffect } from "react";
 import type { Festival } from "../../data/festivals";
-import FestivalSchedule from "./FestivalSchedule";
 
-const FestivalDetailsModal: React.FC<{ festival?: Festival; open: boolean; onClose: () => void }> = ({ festival, open, onClose }) => {
+const FestivalDetailsModal: React.FC<{ festival?: Festival | null; open?: boolean; onClose: () => void }> = ({ festival, open = false, onClose }) => {
   if (!open || !festival) return null;
 
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    const prev = document.body.style.overflow;
+    // lock body scroll while modal is open
+    document.body.style.overflow = "hidden";
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      document.body.style.overflow = prev;
+    };
+  }, [onClose]);
+
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-      <div className="bg-white rounded-lg max-w-3xl w-full overflow-auto max-h-[90vh] p-6">
-        <div className="flex justify-between items-start">
-          <h2 className="text-xl font-semibold text-amber-900">{festival.name}</h2>
-          <button onClick={onClose} aria-label="Close" className="text-amber-600">Close</button>
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+      <div className="absolute inset-0 bg-black/50" onClick={onClose} />
+
+      <div
+        className="relative max-w-3xl w-full bg-white rounded-lg shadow-lg overflow-hidden"
+        role="dialog"
+        aria-modal="true"
+        aria-label={festival.name}
+        onClick={(e) => e.stopPropagation()} // prevent overlay clicks from closing when interacting with modal
+      >
+        <div className="flex items-start justify-between p-4 border-b">
+          <h3 className="text-lg font-semibold text-amber-900">{festival.name}</h3>
+          <button onClick={onClose} aria-label="Close modal" className="text-slate-600 hover:text-slate-800">Close</button>
         </div>
-        <p className="mt-3 text-amber-700">{festival.description}</p>
-        <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <h3 className="font-medium text-amber-900">Festival Details</h3>
-            <ul className="text-sm text-amber-700 mt-2 space-y-1">
-              <li><strong>Date:</strong> {festival.date}</li>
-              <li><strong>Venue:</strong> {festival.venue}</li>
-              <li><strong>Organized By:</strong> {festival.organizers}</li>
-              <li><strong>Contact:</strong> {festival.contact}</li>
-            </ul>
+
+        
+
+        <div className="p-4">
+          <div className="h-[60vh] overflow-auto">
+            <p className="text-sm text-slate-600">{festival.date} • {festival.location}</p>
+            {festival.venue && <p className="text-sm text-slate-600">Venue: {festival.venue}</p>}
+            {festival.contact && <p className="mt-2 text-sm text-slate-600">Contact: {festival.contact}</p>}
+
+            {festival.description && (
+              <p className="mt-3 text-sm text-slate-700">{festival.description}</p>
+            )}
+
+            {festival.programs && festival.programs.length > 0 && (
+              <div className="mt-4">
+                <h4 className="font-semibold text-amber-800">Full program</h4>
+                <ul className="mt-2 list-disc ml-5 text-sm text-slate-700">
+                  {festival.programs.map((p) => (
+                    <li key={p.id} className="mb-1">
+                      {p.time && <span className="text-slate-500 mr-2">{p.time}</span>}
+                      <span>{p.name}</span>
+                      {p.description && <div className="text-xs text-slate-500">{p.description}</div>}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
           </div>
-          <div>
-            <h3 className="font-medium text-amber-900">Schedule</h3>
-            <FestivalSchedule programs={festival.programs || []} />
-          </div>
-        </div>
-        <div className="mt-6 text-right">
-          <button onClick={onClose} className="bg-amber-700 text-white px-4 py-2 rounded">Close</button>
         </div>
       </div>
     </div>

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import QUIZ_DATA from "../../../data/quizData";
-import type { QuizSet, QuizQuestion } from "../../../data/quizData";
+import type { QuizQuestion } from "../../../data/quizData";
 
 const AGE_GROUPS = ["4-9", "10-14", "15-23", "23-45"];
 

@@ -1,6 +1,6 @@
 import React, { useRef, useState } from "react";
 import CommunityHero from "../components/community/CommunityHero";
-import CultureSection from "../components/community/CultureSection";
+//import CultureSection from "../components/community/CultureSection";
 import UpcomingFestivals from "../components/community/UpcomingFestivals";
 import FestivalDetailsModal from "../components/community/FestivalDetailsModal";
 import QuizModule from "../components/community/Quiz/QuizModule";

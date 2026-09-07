@@ -25,26 +25,34 @@ export interface Festival {
 
 export const FESTIVALS: Festival[] = [
   {
-    id: "ganesha-2026",
-    name: "Ganesha Festival 2026",
-    date: "17 September 2026",
+    id: "vinayaka-2026",
+    name: "Vinayaka Chavithi Festival",
+    date: "Thursday 17 – Saturday 19 September 2026",
     isoDate: "2026-09-17T18:00:00",
-    location: "Our Village",
-    venue: "Village Community Center",
-    organizers: "Village Community",
-    contact: "+91-99999-00000",
-    image: "https://images.unsplash.com/photo-1520039667048-5a5c8f2b6b9a?q=80&w=1400&auto=format&fit=crop&ixlib=rb-4.0.3&s=example",
+    location: "Menatampalli Village, SS Konda Post",
+    venue: "Village Mandapam",
+    organizers: "M.N.P SSC Batch",
+    contact: "Sagar — 9000542052",
+    image:
+      "https://images.unsplash.com/photo-1542736667-069246bdbc75?q=80&w=1400&auto=format&fit=crop&ixlib=rb-4.0.3&s=example",
     description:
-      "Join our village community in celebrating Lord Ganesha with devotion, cultural programs, games, competitions and community activities.",
-    startTime: "08:00",
-    endTime: "22:00",
+      "Three-day Vinayaka Chavithi celebration with puja, cultural programs, games, competitions and community annadanam.",
+    startTime: "18:30",
+    endTime: "23:30",
     programs: [
-      { id: "p1", name: "Ganapathi Puja", category: "ritual", time: "08:00" },
-      { id: "p2", name: "Children's Traditional Games", category: "games", time: "11:00", ageGroup: "4-9" },
-      { id: "p3", name: "Quiz Competition", category: "competition", time: "14:00", ageGroup: "10-14" },
-      { id: "p4", name: "Cultural Dance", category: "cultural", time: "18:00" },
-      { id: "p5", name: "Ganesha Procession", category: "procession", time: "20:00" },
-      { id: "p6", name: "Prasadam Distribution", category: "community", time: "12:30" }
+      { id: "d1-1", name: "Pooja (Installation & Evening Puja)", category: "Day 1", time: "6:30–7:30 PM", description: "Village Mandapam" },
+      { id: "d1-2", name: "Annadanam — Prasadam Distribution", category: "Day 1", time: "7:30–9:00 PM" },
+      { id: "d1-3", name: "Chekkala Bajana (Traditional singing)", category: "Day 1", time: "8:00–11:00 PM" },
+
+      { id: "d2-1", name: "Rangoli Competition", category: "Day 2", time: "8:00–9:00 AM" },
+      { id: "d2-2", name: "Youth Programs (fitness, sports)", category: "Day 2", time: "9:30–12:30 PM" },
+      { id: "d2-3", name: "Kids' Sports Competition", category: "Day 2", time: "2:00–3:30 PM" },
+      { id: "d2-4", name: "Cultural Events & Group Dance", category: "Day 2", time: "4:30–8:30 PM" },
+      { id: "d2-5", name: "Group Dance Performance", category: "Day 2", time: "9:30–11:30 PM" },
+
+      { id: "d3-1", name: "Kids' Games & Otti Kotuta", category: "Day 3", time: "9:30–11:30 AM" },
+      { id: "d3-2", name: "Elder Games & Musical Chairs", category: "Day 3", time: "2:30–4:30 PM" },
+      { id: "d3-3", name: "Nimarjanam (Procession & Immersion)", category: "Day 3", time: "5:30–11:30 PM", description: "Grand Procession with DJ & Sky Rockets" }
     ]
   }
 ];

@@ -9,12 +9,27 @@ const FestivalCard: React.FC<{ festival: Festival; onView: (id: string) => void;
       <div className="card-body">
         <div className="flex items-center justify-between">
           <h3 className="font-semibold text-amber-900 text-lg">{festival.name}</h3>
-          <span className="festival-badge">{festival.type || 'Festival'}</span>
+          <span className="festival-badge">{festival.name || 'Festival'}</span>
         </div>
 
         <p className="text-sm text-slate-600 mt-1">{festival.date} • {festival.location}</p>
 
         <p className="mt-3 text-sm text-slate-700">{festival.description}</p>
+
+        {festival.contact && (
+          <p className="mt-2 text-sm text-slate-600">Contact: {festival.contact}</p>
+        )}
+
+        {festival.programs && festival.programs.length > 0 && (
+          <div className="mt-3 text-sm text-slate-700">
+            <strong className="text-amber-800">Program highlights:</strong>
+            <ul className="mt-1 list-disc ml-5">
+              {festival.programs.slice(0, 4).map((p) => (
+                <li key={p.id}>{p.time ? `${p.time} — ` : ''}{p.name}</li>
+              ))}
+            </ul>
+          </div>
+        )}
 
         <div className="mt-4 flex items-center justify-between">
           <button onClick={() => onView(festival.id)} className="btn-primary">View Details</button>
@@ -36,16 +51,25 @@ const UpcomingFestivals: React.FC<{ onSelectFestival: (id: string) => void }> = 
 
   const next = festivals[0];
 
+  const handleView = (id: string) => {
+    // Delegate to parent to open the shared modal
+    try {
+      onSelectFestival?.(id);
+    } catch (e) {
+      // ignore
+    }
+  };
+
   return (
     <section id="festivals" className="mt-10">
       <h2 className="text-2xl font-semibold text-amber-900">Upcoming Festivals</h2>
       <div className="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4">
         <div className="md:col-span-2">
-          <FestivalCard festival={next} onView={onSelectFestival} highlight />
+          <FestivalCard festival={next} onView={handleView} highlight />
         </div>
         <div className="space-y-4">
           {festivals.slice(1).map((f) => (
-            <FestivalCard key={f.id} festival={f} onView={onSelectFestival} />
+            <FestivalCard key={f.id} festival={f} onView={handleView} />
           ))}
         </div>
       </div>
