@@ -45,115 +45,126 @@ const FestivalDetailsModal: React.FC<{ festival?: Festival | null; open?: boolea
   if (!open || !festival) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      <div className="absolute inset-0 bg-black/50 clickable" onClick={onClose} />
+    <div className="fixed inset-0 z-[1000] flex items-center justify-center p-3 sm:p-6">
+      <div className="absolute inset-0 z-0 bg-slate-950/65 backdrop-blur-sm" onClick={onClose} />
 
       <div
-        className="relative max-w-3xl w-full bg-white rounded-lg shadow-lg overflow-hidden"
+        className="relative z-10 w-full max-w-5xl overflow-hidden rounded-[28px] border border-white/10 bg-white shadow-[0_25px_80px_rgba(15,23,42,0.25)]"
         role="dialog"
         aria-modal="true"
         aria-label={festival.name}
-        onClick={(e) => e.stopPropagation()} // prevent overlay clicks from closing when interacting with modal
+        onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex items-start justify-between p-4 border-b">
-          <h3 className="text-lg font-semibold text-amber-900">{festival.name}</h3>
-          <button onClick={onClose} aria-label="Close modal" className="text-slate-600 hover:text-slate-800">Close</button>
+        <div className="flex items-center justify-between border-b border-slate-200 bg-gradient-to-r from-amber-50 via-orange-50 to-emerald-50 px-5 py-4 sm:px-6">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-amber-700">Festival details</p>
+            <h3 className="mt-1 text-xl font-bold text-slate-900 sm:text-2xl">{festival.name}</h3>
+          </div>
+          <button
+            type="button"
+            onClick={onClose}
+            className="rounded-full border border-slate-200 bg-white px-3 py-1.5 text-sm font-medium text-slate-600 transition hover:border-slate-300 hover:text-slate-900"
+          >
+            Close
+          </button>
         </div>
-        {/* Banner image: use festival.image or fallback to a related Unsplash image */}
-        <div
-          className="h-58 bg-cover bg-center"
-          style={{
-            backgroundImage: `url(${festival.image || "/Festival.jpeg"})`,
-          }}
-        />
 
-        <div className="p-4">
-          <div className="h-[60vh] overflow-auto">
-            <p className="text-sm text-slate-600">{festival.date} • {festival.location}</p>
-            {festival.venue && <p className="text-sm text-slate-600">Venue: {festival.venue}</p>}
-            {festival.contact && <p className="mt-2 text-sm text-slate-600">Contact: {festival.contact}</p>}
+        <div className="max-h-[80vh] overflow-y-auto">
+          <div
+            className="h-56 bg-cover bg-center sm:h-64"
+            style={{
+              backgroundImage: `url(${festival.image || "/Festival.jpeg"})`,
+            }}
+          />
+
+          <div className="p-4 sm:p-6">
+            <div className="mb-5 flex flex-col gap-3 rounded-[24px] border border-amber-100 bg-amber-50/60 p-4 sm:flex-row sm:items-center sm:justify-between">
+              <div className="space-y-1 text-sm text-slate-600">
+                <p className="font-medium text-slate-700">{festival.date} • {festival.location}</p>
+                {festival.venue && <p>Venue: {festival.venue}</p>}
+                {festival.contact && <p>Contact: {festival.contact}</p>}
+              </div>
+              {festival.venue && (
+                <span className="inline-flex w-fit rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-emerald-700">
+                  Community event
+                </span>
+              )}
+            </div>
 
             {festival.description && (
-              <p className="mt-3 text-sm text-slate-700">{festival.description}</p>
+              <p className="mb-5 text-sm leading-6 text-slate-700">{festival.description}</p>
             )}
 
-              {/* If a specific program is focused, show its detailed info up-front */}
-              {focusedProgramId && festival.programs && (
-                (() => {
-                  const focused = festival.programs?.find((pp) => pp.id === focusedProgramId);
-                  if (!focused) return null;
-                  return (
-                    <div className="mt-4 p-3 border rounded bg-amber-50">
-                      <div className="text-sm text-amber-900 font-semibold">{focused.name} — {festival.name}</div>
-                      <div className="text-xs text-slate-600 mt-1">{focused.time || ''} {focused.category ? `• ${focused.category}` : ''}</div>
-                      {focused.description && <div className="mt-2 text-sm text-slate-700">{focused.description}</div>}
-                    </div>
-                  );
-                })()
-              )}
+            {focusedProgramId && festival.programs && (() => {
+              const focused = festival.programs?.find((pp) => pp.id === focusedProgramId);
+              if (!focused) return null;
+              return (
+                <div className="mb-5 rounded-[24px] border border-amber-200 bg-amber-50 p-4">
+                  <div className="text-sm font-semibold text-amber-900">{focused.name} — {festival.name}</div>
+                  <div className="mt-1 text-xs text-slate-600">{focused.time || ""} {focused.category ? `• ${focused.category}` : ""}</div>
+                  {focused.description && <div className="mt-2 text-sm text-slate-700">{focused.description}</div>}
+                </div>
+              );
+            })()}
 
-                {festival.programs && festival.programs.length > 0 && (
-                  <div className="mt-4">
-                    <h4 className="font-semibold text-amber-800">Agenda (by date)</h4>
-                    <div className="mt-2 text-sm text-slate-700">
-                      {(() => {
-                        // Group programs by day label like "Day 1" or fallback to category
-                        const programs = festival.programs || [];
+            {festival.programs && festival.programs.length > 0 && (
+              <div className="rounded-[24px] border border-slate-200 bg-slate-50 p-4 sm:p-5">
+                <h4 className="text-sm font-semibold uppercase tracking-[0.2em] text-slate-500">Agenda</h4>
+                <div className="mt-4 space-y-4 text-sm text-slate-700">
+                  {(() => {
+                    const programs = festival.programs || [];
+                    const baseDate = festival.isoDate ? new Date(festival.isoDate) : null;
+                    const groups: Record<string, typeof programs> = {};
 
-                        // Try to compute a base date from festival.isoDate
-                        const baseDate = festival.isoDate ? new Date(festival.isoDate) : null;
+                    programs.forEach((p, idx) => {
+                      const cat = (p.category || "").trim();
+                      const m = cat.match(/Day\s*(\d+)/i);
+                      const key = m ? `Day ${m[1]}` : (cat || `Day ${Math.floor(idx / 6) + 1}`);
+                      if (!groups[key]) groups[key] = [];
+                      groups[key].push(p);
+                    });
 
-                        const groups: Record<string, typeof programs> = {};
+                    const dayKeys = Object.keys(groups).sort((a, b) => {
+                      const ma = a.match(/Day\s*(\d+)/i);
+                      const mb = b.match(/Day\s*(\d+)/i);
+                      if (ma && mb) return Number(ma[1]) - Number(mb[1]);
+                      return a.localeCompare(b);
+                    });
 
-                        programs.forEach((p, idx) => {
-                          const cat = (p.category || '').trim();
-                          const m = cat.match(/Day\s*(\d+)/i);
-                          const key = m ? `Day ${m[1]}` : (cat || `Day ${Math.floor(idx / 6) + 1}`);
-                          if (!groups[key]) groups[key] = [];
-                          groups[key].push(p);
-                        });
+                    return dayKeys.map((dayKey) => {
+                      let dateLabel = dayKey;
+                      if (baseDate) {
+                        const m = dayKey.match(/Day\s*(\d+)/i);
+                        if (m) {
+                          const dayIndex = Number(m[1]) - 1;
+                          const d = new Date(baseDate);
+                          d.setDate(d.getDate() + dayIndex);
+                          dateLabel = d.toLocaleDateString(undefined, { weekday: "long", year: "numeric", month: "long", day: "numeric" });
+                        }
+                      }
 
-                        const dayKeys = Object.keys(groups).sort((a, b) => {
-                          const ma = a.match(/Day\s*(\d+)/i);
-                          const mb = b.match(/Day\s*(\d+)/i);
-                          if (ma && mb) return Number(ma[1]) - Number(mb[1]);
-                          return a.localeCompare(b);
-                        });
-
-                        return dayKeys.map((dayKey) => {
-                          // compute readable date for this day
-                          let dateLabel = dayKey;
-                          if (baseDate) {
-                            const m = dayKey.match(/Day\s*(\d+)/i);
-                            if (m) {
-                              const dayIndex = Number(m[1]) - 1;
-                              const d = new Date(baseDate);
-                              d.setDate(d.getDate() + dayIndex);
-                              dateLabel = d.toLocaleDateString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-                            }
-                          }
-
-                          return (
-                            <div key={dayKey} className="mb-4">
-                              <div className="text-sm font-medium text-amber-900 mb-2">{dateLabel}</div>
-                              <ul className="list-none ml-0">
-                                {groups[dayKey].map((p) => (
-                                  <li key={p.id} className="mb-2 flex items-start">
-                                    <div className="w-28 text-slate-500 text-xs">{p.time || ''}</div>
-                                    <div>
-                                      <div className="font-semibold text-slate-800">{p.name}</div>
-                                      {p.description && <div className="text-xs text-slate-500">{p.description}</div>}
-                                    </div>
-                                  </li>
-                                ))}
-                              </ul>
-                            </div>
-                          );
-                        });
-                      })()}
-                    </div>
-                  </div>
-                )}
+                      return (
+                        <div key={dayKey} className="rounded-2xl border border-slate-200 bg-white p-3">
+                          <div className="mb-2 text-sm font-semibold text-amber-900">{dateLabel}</div>
+                          <ul className="space-y-2">
+                            {groups[dayKey].map((p) => (
+                              <li key={p.id} className="flex items-start gap-3">
+                                <div className="mt-1 h-2.5 w-2.5 rounded-full bg-amber-400" />
+                                <div className="flex-1">
+                                  <div className="font-medium text-slate-800">{p.name}</div>
+                                  <div className="text-xs text-slate-500">{p.time || ""}{p.time && p.category ? " • " : ""}{p.category || ""}</div>
+                                  {p.description && <div className="mt-1 text-xs text-slate-600">{p.description}</div>}
+                                </div>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      );
+                    });
+                  })()}
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>

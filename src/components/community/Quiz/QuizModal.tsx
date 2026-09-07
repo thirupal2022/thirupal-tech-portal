@@ -39,11 +39,11 @@ const QuizModal: React.FC<{ open: boolean; onClose: () => void }> = ({ open, onC
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6">
-      <div className="absolute inset-0 bg-slate-950/65 backdrop-blur-sm" onClick={onClose} />
+    <div className="fixed inset-0 z-[1000] flex items-center justify-center p-3 sm:p-6">
+      <div className="absolute inset-0 z-0 bg-slate-950/65 backdrop-blur-sm" onClick={onClose} />
 
       <div
-        className="relative w-full max-w-5xl overflow-hidden rounded-[28px] border border-white/10 bg-white shadow-[0_25px_80px_rgba(15,23,42,0.25)]"
+        className="relative z-10 w-full max-w-5xl overflow-hidden rounded-[28px] border border-white/10 bg-white shadow-[0_25px_80px_rgba(15,23,42,0.25)]"
         role="dialog"
         aria-modal="true"
         aria-label="Explore Quiz"

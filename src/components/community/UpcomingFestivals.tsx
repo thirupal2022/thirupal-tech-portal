@@ -48,7 +48,7 @@ const FestivalCard: React.FC<{ festival: Festival; onView: (id: string) => void;
               Explore Quiz
             </button>
           </div>
-          <span className="text-xs text-slate-500">Starts: {festival.startTime}</span>
+          
         </div>
       </div>
     </div>
