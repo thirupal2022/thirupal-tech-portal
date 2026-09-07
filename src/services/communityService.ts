@@ -13,6 +13,9 @@ export const communityService = {
   },
   async getQuizByAgeGroup(ageGroup: string): Promise<QuizSet[]> {
     return new Promise((res) => setTimeout(() => res(QUIZ_DATA.filter((q) => q.ageGroup === ageGroup)), 150));
+  },
+  async getQuizGroups(): Promise<string[]> {
+    return new Promise((res) => setTimeout(() => res([...new Set(QUIZ_DATA.map((item) => item.ageGroup))]), 80));
   }
 };
 

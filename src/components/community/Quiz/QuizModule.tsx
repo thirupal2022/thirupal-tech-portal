@@ -1,109 +1,281 @@
-import React, { useState } from "react";
-import QUIZ_DATA from "../../../data/quizData";
-import type { QuizQuestion } from "../../../data/quizData";
-
-const AGE_GROUPS = ["4-9", "10-14", "15-23", "23-45"];
+import React, { useEffect, useMemo, useState } from "react";
+import type { QuizSet } from "../../../data/quizData";
+import { QUIZ_AGE_GROUPS } from "../../../data/quizData";
+import { communityService } from "../../../services/communityService";
 
 const QuizModule: React.FC = () => {
-  const [ageGroup, setAgeGroup] = useState<string | undefined>(undefined);
-  const [category, setCategory] = useState<string | undefined>(undefined);
-  const [questions, setQuestions] = useState<QuizQuestion[]>([]);
-  const [index, setIndex] = useState(0);
-  const [score, setScore] = useState(0);
-  const [selected, setSelected] = useState<string | null>(null);
-  const [finished, setFinished] = useState(false);
+  const [selectedAgeGroup, setSelectedAgeGroup] = useState<string>(QUIZ_AGE_GROUPS[0]);
+  const [quizSet, setQuizSet] = useState<QuizSet | null>(null);
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(0);
+  const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
+  const [showExplanation, setShowExplanation] = useState<boolean>(false);
+  const [userAnswers, setUserAnswers] = useState<Record<number, string>>({});
+  const [isCompleted, setIsCompleted] = useState<boolean>(false);
 
-  function startQuiz() {
-    const set = QUIZ_DATA.find((q) => q.ageGroup === ageGroup && q.category === category);
-    if (set) {
-      setQuestions(set.questions);
-      setIndex(0);
-      setScore(0);
-      setSelected(null);
-      setFinished(false);
+  useEffect(() => {
+    communityService.getQuizByAgeGroup(selectedAgeGroup).then((sets) => {
+      const nextSet = sets[0] ?? null;
+      setQuizSet(nextSet);
+      setCurrentQuestionIndex(0);
+      setSelectedAnswer(null);
+      setShowExplanation(false);
+      setUserAnswers({});
+      setIsCompleted(false);
+    });
+  }, [selectedAgeGroup]);
+
+  const currentQuestion = quizSet?.questions[currentQuestionIndex];
+
+  const progressPercent = useMemo(() => {
+    if (!quizSet || !quizSet.questions.length) return 0;
+    return ((currentQuestionIndex + (showExplanation ? 1 : 0)) / quizSet.questions.length) * 100;
+  }, [currentQuestionIndex, quizSet, showExplanation]);
+
+  const score = useMemo(() => {
+    if (!quizSet) return 0;
+    return quizSet.questions.reduce((total, question, index) => {
+      const answer = userAnswers[index];
+      return total + (answer === question.answer ? 1 : 0);
+    }, 0);
+  }, [quizSet, userAnswers]);
+
+  const resultPercent = quizSet ? Math.round((score / quizSet.questions.length) * 100) : 0;
+  const accuracyColor = resultPercent >= 80 ? "#22c55e" : resultPercent >= 50 ? "#f59e0b" : "#ef4444";
+
+  const handleAnswerSelect = (option: string) => {
+    if (!currentQuestion || showExplanation) return;
+    setSelectedAnswer(option);
+    setUserAnswers((prev) => ({ ...prev, [currentQuestionIndex]: option }));
+    setShowExplanation(true);
+  };
+
+  const handleNextQuestion = () => {
+    if (!quizSet || !currentQuestion) return;
+
+    if (currentQuestionIndex < quizSet.questions.length - 1) {
+      setCurrentQuestionIndex((prev) => prev + 1);
+      setSelectedAnswer(null);
+      setShowExplanation(false);
+      return;
     }
+
+    setIsCompleted(true);
+  };
+
+  const handleRestart = () => {
+    setCurrentQuestionIndex(0);
+    setSelectedAnswer(null);
+    setShowExplanation(false);
+    setUserAnswers({});
+    setIsCompleted(false);
+  };
+
+  const isCorrect = selectedAnswer === currentQuestion?.answer;
+
+  if (!quizSet) {
+    return (
+      <div className="rounded-3xl border border-amber-200 bg-amber-50 p-5 text-sm font-medium text-amber-800">
+        Loading quiz questions…
+      </div>
+    );
   }
 
-  function submitAnswer() {
-    if (!selected) return;
-    const q = questions[index];
-    if (selected === q.answer) setScore((s) => s + 1);
-    if (index + 1 < questions.length) {
-      setIndex((i) => i + 1);
-      setSelected(null);
-    } else {
-      setFinished(true);
-    }
+  if (!currentQuestion) {
+    return (
+      <div className="rounded-3xl border border-slate-200 bg-slate-50 p-5 text-sm font-medium text-slate-700">
+        Preparing your quiz…
+      </div>
+    );
   }
 
-  function restart() {
-    setAgeGroup(undefined);
-    setCategory(undefined);
-    setQuestions([]);
-    setIndex(0);
-    setScore(0);
-    setSelected(null);
-    setFinished(false);
-  }
+  if (isCompleted) {
+    const ringStyle = {
+      background: `conic-gradient(${accuracyColor} 0 ${resultPercent}%, rgba(148, 163, 184, 0.18) ${resultPercent}% 100%)`
+    };
 
-  return (
-    <section id="quiz" className="mt-8">
-      <h3 className="text-lg font-semibold text-amber-900">Quiz Competition</h3>
-      {!questions.length && (
-        <div className="mt-3 space-y-3">
+    return (
+      <div className="w-full rounded-[28px] border border-amber-100 bg-white p-5 shadow-[0_18px_50px_rgba(15,23,42,0.06)] sm:p-6">
+        <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
           <div>
-            <label className="text-sm text-amber-700">Select Age Group</label>
-            <select value={ageGroup} onChange={(e) => setAgeGroup(e.target.value)} className="ml-2 border rounded p-1">
-              <option value="">Choose</option>
-              {AGE_GROUPS.map((a) => <option key={a} value={a}>{a}</option>)}
-            </select>
+            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-amber-700">Quiz result</p>
+            <h3 className="mt-1 text-2xl font-bold text-slate-900">{selectedAgeGroup} age group</h3>
           </div>
-          <div>
-            <label className="text-sm text-amber-700">Select Category</label>
-            <select value={category} onChange={(e) => setCategory(e.target.value)} className="ml-2 border rounded p-1">
-              <option value="">Choose</option>
-              <option value="general-knowledge">General Knowledge</option>
-              <option value="funny-things">Funny Things</option>
-              <option value="textbook-related">Textbook Related</option>
-              <option value="mind-quest">Mind Quest</option>
-            </select>
-          </div>
-          <div>
-            <button disabled={!ageGroup || !category} onClick={startQuiz} className="bg-amber-700 text-white px-3 py-1 rounded">Start Quiz</button>
-          </div>
+          <button
+            type="button"
+            onClick={handleRestart}
+            className="rounded-full bg-gradient-to-r from-amber-500 via-orange-500 to-rose-500 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-amber-500/20"
+          >
+            Try again
+          </button>
         </div>
-      )}
 
-      {questions.length > 0 && !finished && (
-        <div className="mt-4 bg-white p-4 rounded shadow-sm">
-          <div className="font-medium text-amber-900">Question {index + 1} of {questions.length}</div>
-          <div className="mt-2 text-amber-700">{questions[index].question}</div>
-          <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-2">
-            {questions[index].options.map((opt) => (
-              <button key={opt} onClick={() => setSelected(opt)} className={`text-left p-2 border rounded ${selected === opt ? 'border-amber-700 bg-amber-50' : 'border-amber-100'}`}>
-                {opt}
-              </button>
-            ))}
+        <div className="grid gap-6 lg:grid-cols-[0.8fr_1.2fr]">
+          <div className="rounded-[24px] bg-gradient-to-br from-slate-900 via-slate-800 to-emerald-900 p-5 text-white">
+            <div className="mx-auto flex h-40 w-40 items-center justify-center rounded-full" style={ringStyle}>
+              <div className="flex h-24 w-24 flex-col items-center justify-center rounded-full bg-slate-900 text-center">
+                <span className="text-3xl font-bold">{resultPercent}%</span>
+                <span className="text-[10px] uppercase tracking-[0.25em] text-slate-300">Score</span>
+              </div>
+            </div>
+
+            <div className="mt-5 space-y-3 text-sm text-slate-200">
+              <div className="flex items-center justify-between rounded-2xl bg-white/5 px-3 py-2">
+                <span>Correct</span>
+                <strong className="text-emerald-300">{score}/{quizSet.questions.length}</strong>
+              </div>
+              <div className="flex items-center justify-between rounded-2xl bg-white/5 px-3 py-2">
+                <span>Performance</span>
+                <strong className={resultPercent >= 80 ? "text-emerald-300" : resultPercent >= 50 ? "text-amber-300" : "text-rose-300"}>
+                  {resultPercent >= 80 ? "Excellent" : resultPercent >= 50 ? "Good" : "Keep learning"}
+                </strong>
+              </div>
+            </div>
           </div>
-          <div className="mt-3 flex justify-between items-center">
-            <div className="text-sm text-amber-600">Score: {score}</div>
-            <div>
-              <button onClick={submitAnswer} className="bg-amber-700 text-white px-3 py-1 rounded" disabled={!selected}>Submit</button>
+
+          <div className="space-y-4">
+            <div className="rounded-[24px] border border-slate-200 bg-slate-50 p-4">
+              <p className="mb-3 text-sm font-semibold uppercase tracking-[0.2em] text-slate-500">Answer breakdown</p>
+              <div className="space-y-3">
+                {quizSet.questions.map((question, index) => {
+                  const chosen = userAnswers[index];
+                  const isRight = chosen === question.answer;
+                  return (
+                    <div key={question.id} className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-white px-3 py-2">
+                      <div className={`flex h-7 w-7 items-center justify-center rounded-full text-xs font-bold ${isRight ? "bg-emerald-100 text-emerald-700" : "bg-rose-100 text-rose-700"}`}>
+                        {isRight ? "✓" : "✕"}
+                      </div>
+                      <div className="flex-1 text-sm text-slate-700">
+                        <span className="font-medium">Q{index + 1}:</span> {question.question}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            <div className="rounded-[24px] border border-slate-200 bg-gradient-to-r from-amber-50 via-orange-50 to-rose-50 p-4">
+              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-slate-500">Insight</p>
+              <p className="mt-2 text-sm text-slate-700">
+                {resultPercent >= 80
+                  ? "Excellent work! You have a strong grasp of this topic and are ready for the next challenge."
+                  : resultPercent >= 50
+                    ? "Good effort! A few more rounds will sharpen your knowledge and boost your confidence."
+                    : "Nice start. Review the explanations and try another round to build a stronger understanding."}
+              </p>
             </div>
           </div>
         </div>
-      )}
+      </div>
+    );
+  }
 
-      {finished && (
-        <div className="mt-4 bg-white p-4 rounded shadow-sm text-center">
-          <h4 className="text-amber-900 font-semibold">Excellent! 🎉</h4>
-          <p className="mt-2 text-amber-700">You scored {score} out of {questions.length}.</p>
-          <div className="mt-3">
-            <button onClick={restart} className="bg-amber-700 text-white px-3 py-1 rounded">Restart</button>
+  return (
+    <div className="w-full">
+      <div className="mb-5 flex flex-wrap gap-2">
+        {QUIZ_AGE_GROUPS.map((ageGroup) => (
+          <button
+            key={ageGroup}
+            type="button"
+            onClick={() => setSelectedAgeGroup(ageGroup)}
+            className={`rounded-full px-4 py-2 text-sm font-semibold transition ${
+              selectedAgeGroup === ageGroup
+                ? "bg-gradient-to-r from-amber-500 via-orange-500 to-rose-500 text-white shadow-lg shadow-amber-500/25"
+                : "bg-slate-100 text-slate-700 hover:bg-slate-200"
+            }`}
+          >
+            {ageGroup}
+          </button>
+        ))}
+      </div>
+
+      <div className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
+        <div className="rounded-[28px] border border-amber-100 bg-white p-5 shadow-[0_18px_50px_rgba(15,23,42,0.06)] sm:p-6">
+          <div className="mb-5 flex items-center justify-between gap-3">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.22em] text-slate-500">Age group</p>
+              <h4 className="mt-1 text-xl font-bold text-slate-900">{selectedAgeGroup}</h4>
+            </div>
+            <span className="rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700">
+              {quizSet.category}
+            </span>
+          </div>
+
+          <div className="mb-5 h-2.5 w-full overflow-hidden rounded-full bg-slate-100">
+            <div
+              className="h-full rounded-full bg-gradient-to-r from-amber-500 via-orange-500 to-emerald-500 transition-all duration-300"
+              style={{ width: `${progressPercent}%` }}
+            />
+          </div>
+
+          <p className="text-sm font-medium text-slate-500">
+            Question {currentQuestionIndex + 1} of {quizSet.questions.length}
+          </p>
+          <h3 className="mt-3 text-2xl font-bold leading-snug text-slate-900">{currentQuestion.question}</h3>
+
+          <div className="mt-5 grid gap-3">
+            {currentQuestion.options.map((option) => {
+              const isSelected = selectedAnswer === option;
+              const isCorrectOption = option === currentQuestion.answer;
+              const revealStyle = showExplanation
+                ? isCorrectOption
+                  ? "border-emerald-500 bg-emerald-50 text-emerald-800"
+                  : isSelected
+                    ? "border-rose-400 bg-rose-50 text-rose-700"
+                    : "border-slate-200 bg-slate-50 text-slate-600"
+                : isSelected
+                  ? "border-amber-500 bg-amber-50 text-amber-800"
+                  : "border-slate-200 bg-white text-slate-700 hover:border-amber-300 hover:bg-amber-50/60";
+
+              return (
+                <button
+                  key={option}
+                  type="button"
+                  onClick={() => handleAnswerSelect(option)}
+                  className={`w-full rounded-2xl border px-4 py-3 text-left text-sm font-medium transition ${revealStyle}`}
+                >
+                  {option}
+                </button>
+              );
+            })}
+          </div>
+
+          {showExplanation && (
+            <div
+              className={`mt-5 rounded-2xl border p-4 text-sm ${
+                isCorrect
+                  ? "border-emerald-200 bg-emerald-50 text-emerald-800"
+                  : "border-rose-200 bg-rose-50 text-rose-700"
+              }`}
+            >
+              <p className="font-semibold">{isCorrect ? "Correct!" : "Not quite — keep exploring!"}</p>
+              <p className="mt-1">{currentQuestion.explanation}</p>
+            </div>
+          )}
+
+          <div className="mt-6 flex items-center justify-between gap-3">
+            <span className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">Build curiosity</span>
+            <button
+              type="button"
+              onClick={handleNextQuestion}
+              className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-emerald-500 via-teal-600 to-cyan-600 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-emerald-500/20 transition hover:-translate-y-0.5"
+              disabled={!showExplanation}
+            >
+              {currentQuestionIndex === quizSet.questions.length - 1 ? "Finish quiz" : "Next question"}
+            </button>
           </div>
         </div>
-      )}
-    </section>
+
+        <div className="rounded-[28px] bg-gradient-to-br from-slate-900 via-slate-800 to-amber-900 p-5 text-white shadow-[0_20px_50px_rgba(15,23,42,0.18)] sm:p-6">
+          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-amber-200">Why it matters</p>
+          <h3 className="mt-2 text-2xl font-bold">Celebrate learning through culture</h3>
+          <ul className="mt-5 space-y-3 text-sm text-slate-200">
+            <li className="rounded-2xl border border-white/10 bg-white/5 p-3">Fast, playful questions that turn learning into a fun habit.</li>
+            <li className="rounded-2xl border border-white/10 bg-white/5 p-3">A balanced mix of curiosity, creativity, and real-world thinking.</li>
+            <li className="rounded-2xl border border-white/10 bg-white/5 p-3">Perfect for community events, skill-building, and family engagement.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
   );
 };
 

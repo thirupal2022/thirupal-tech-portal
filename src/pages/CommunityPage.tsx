@@ -4,7 +4,7 @@ import CommunityHero from "../components/community/CommunityHero";
 import UpcomingFestivals from "../components/community/UpcomingFestivals";
 import FestivalDetailsModal from "../components/community/FestivalDetailsModal";
 import ProgramDetailsModal from "../components/community/ProgramDetailsModal";
-import QuizModule from "../components/community/Quiz/QuizModule";
+import QuizModal from "../components/community/Quiz/QuizModal";
 import { communityService } from "../services/communityService";
 import EventsExplorer from "../components/community/EventsExplorer";
 
@@ -12,6 +12,7 @@ const CommunityPage: React.FC = () => {
   const festivalsRef = useRef<HTMLDivElement | null>(null);
   const [festivalData, setFestivalData] = useState<any>(undefined);
   const [modalOpen, setModalOpen] = useState(false);
+  const [quizOpen, setQuizOpen] = useState(false);
   const [explorerOpen, setExplorerOpen] = useState(false);
   const [festivalsList, setFestivalsList] = useState<any[]>([]);
   const [focusedProgramId, setFocusedProgramId] = useState<string | undefined>(undefined);
@@ -31,7 +32,6 @@ const CommunityPage: React.FC = () => {
   };
 
   const exploreEvents = () => {
-    // Open the dedicated Events Explorer modal
     communityService.getFestivals().then((list) => {
       setFestivalsList(list || []);
       setExplorerOpen(true);
@@ -40,12 +40,10 @@ const CommunityPage: React.FC = () => {
 
   const closeModal = () => {
     setModalOpen(false);
-    // clear selected festival data and focused program
     setFestivalData(undefined);
     setFocusedProgramId(undefined);
     try {
-      // Force-remove any leftover body overflow lock in case cleanup didn't run
-      document.body.style.overflow = '';
+      document.body.style.overflow = "";
       // @ts-ignore
       if ((window as any).__modalOpenCount) delete (window as any).__modalOpenCount;
     } catch (e) {
@@ -60,23 +58,15 @@ const CommunityPage: React.FC = () => {
       <CultureSection />
       */ }
       <div ref={festivalsRef}>
-        <UpcomingFestivals onSelectFestival={onSelectFestival} />
+        <UpcomingFestivals onSelectFestival={onSelectFestival} onExploreQuiz={() => setQuizOpen(true)} />
       </div>
 
       <section id="programs" className="mt-8">
-        <h2 className="text-2xl font-semibold text-amber-900">Festival Programs & Activities</h2>
-        <p className="text-sm text-amber-700 mt-1">Join the village programs — registrations open for select events.</p>
         {/* Could map ProgramCard components here in future using festival data */}
       </section>
 
-      <QuizModule />
-
-      <section id="memories" className="mt-8">
-        <h2 className="text-2xl font-semibold text-amber-900">Memories From Our Community</h2>
-        <p className="text-sm text-amber-700 mt-2">Previous festivals and event highlights will appear here.</p>
-      </section>
-
       <FestivalDetailsModal festival={festivalData} open={modalOpen} onClose={closeModal} focusedProgramId={focusedProgramId} />
+      <QuizModal open={quizOpen} onClose={() => setQuizOpen(false)} />
 
       <ProgramDetailsModal open={programModalOpen} festival={programFestival} program={programData} onClose={() => setProgramModalOpen(false)} />
 
@@ -85,13 +75,11 @@ const CommunityPage: React.FC = () => {
         festivals={festivalsList}
         onClose={() => setExplorerOpen(false)}
         onOpenProgram={(id, programId) => {
-          // open the dedicated program modal for the selected program (keep explorer open)
           communityService.getFestivalById(id).then((f) => {
             setProgramFestival(f);
             const prog = f?.programs?.find((pp: any) => pp.id === programId);
             setProgramData(prog);
             setProgramModalOpen(true);
-            // keep explorer open in background so user returns to it after closing program modal
           });
         }}
       />
