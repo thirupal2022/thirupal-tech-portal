@@ -5,10 +5,14 @@ import { communityService } from "../../services/communityService";
 const FestivalCard: React.FC<{ festival: Festival; onView: (id: string) => void; onExploreQuiz?: () => void; highlight?: boolean }> = ({ festival, onView, onExploreQuiz, highlight }) => {
   return (
     <div className={`festival-card ${highlight ? "border-2 border-amber-300" : ""}`}>
-      <div
-        className="card-image h-80 md:h-96 bg-cover bg-center"
-        style={{ backgroundImage: `url(${festival.image})` }}
-      />
+      
+      {/* Banner image: use festival.image or fallback to a related Unsplash image */}
+        <div
+          className="h-58 bg-cover bg-center"
+          style={{
+            backgroundImage: `url(${festival.image || "/Festival.jpeg"})`,
+          }}
+        />
       <div className="card-body">
         <div className="flex items-center justify-between">
           <h3 className="font-semibold text-amber-900 text-lg">{festival.name}</h3>

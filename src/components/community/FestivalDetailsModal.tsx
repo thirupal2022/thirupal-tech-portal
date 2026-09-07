@@ -61,7 +61,7 @@ const FestivalDetailsModal: React.FC<{ festival?: Festival | null; open?: boolea
         </div>
         {/* Banner image: use festival.image or fallback to a related Unsplash image */}
         <div
-          className="h-48 bg-cover bg-center"
+          className="h-58 bg-cover bg-center"
           style={{
             backgroundImage: `url(${festival.image || "/Festival.jpeg"})`,
           }}
