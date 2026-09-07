@@ -10,6 +10,11 @@ export default function Navbar() {
     { label: "Home", path: "/" },
     { label: "About", path: "/about" },
     { label: "Blogs", path: "/blogs" },
+    { label: "Community", path: "/community" },
+    { label: "Mission", path: "/mission" },
+    { label: "Initiatives", path: "/initiatives" },
+    { label: "Tech Hub", path: "/techhub" },
+    { label: "Future", path: "/future" },
     { label: "Contact", path: "/contact" },
   ];
 
@@ -59,19 +64,12 @@ export default function Navbar() {
             </div>
           </Link>
 
-          <nav
-            className="
-              hidden
-              md:flex
-              items-center
-              gap-8
-            "
-          >
+          <nav className="hidden md:flex items-center gap-6">
             {links.map((link) => (
               <NavLink
                 key={link.label}
                 to={link.path}
-                className="nav-link font-medium"
+                className={({ isActive }) => `nav-link font-medium ${isActive ? 'active' : ''}`}
               >
                 {link.label}
               </NavLink>
