@@ -33,8 +33,7 @@ export const FESTIVALS: Festival[] = [
     venue: "Village Mandapam",
     organizers: "M.N.P SSC Batch",
     contact: "Sagar — 9000542052",
-    image:
-      "https://images.unsplash.com/photo-1542736667-069246bdbc75?q=80&w=1400&auto=format&fit=crop&ixlib=rb-4.0.3&s=example",
+    image: "/Festival.jpeg",
     description:
       "Three-day Vinayaka Chavithi celebration with puja, cultural programs, games, competitions and community annadanam.",
     startTime: "18:30",

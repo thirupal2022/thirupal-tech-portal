@@ -22,6 +22,20 @@ const CommunityPage: React.FC = () => {
     });
   };
 
+  const closeModal = () => {
+    setModalOpen(false);
+    // clear selected festival data to ensure modal unmounts cleanly
+    setFestivalData(undefined);
+    try {
+      // Force-remove any leftover body overflow lock in case cleanup didn't run
+      document.body.style.overflow = '';
+      // @ts-ignore
+      if ((window as any).__modalOpenCount) delete (window as any).__modalOpenCount;
+    } catch (e) {
+      // ignore
+    }
+  };
+
   return (
     <main className="max-w-6xl mx-auto px-4 py-8">
       <CommunityHero onScrollToFestivals={scrollToFestivals} />
@@ -45,7 +59,7 @@ const CommunityPage: React.FC = () => {
         <p className="text-sm text-amber-700 mt-2">Previous festivals and event highlights will appear here.</p>
       </section>
 
-      <FestivalDetailsModal festival={festivalData} open={modalOpen} onClose={() => setModalOpen(false)} />
+      <FestivalDetailsModal festival={festivalData} open={modalOpen} onClose={closeModal} />
     </main>
   );
 };

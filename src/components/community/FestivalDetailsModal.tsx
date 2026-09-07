@@ -8,13 +8,32 @@ const FestivalDetailsModal: React.FC<{ festival?: Festival | null; open?: boolea
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
     };
-    const prev = document.body.style.overflow;
-    // lock body scroll while modal is open
-    document.body.style.overflow = "hidden";
+
+    // Robust body-scroll lock: keep a global counter so nested/rapid mounts
+    // don't permanently prevent scrolling.
+    const counterKey = '__modalOpenCount';
+    // @ts-ignore
+    (window as any)[counterKey] = ((window as any)[counterKey] || 0) + 1;
+    // Only set overflow hidden on the first modal
+    // @ts-ignore
+    if ((window as any)[counterKey] === 1) document.body.style.overflow = 'hidden';
+
     document.addEventListener("keydown", onKey);
     return () => {
       document.removeEventListener("keydown", onKey);
-      document.body.style.overflow = prev;
+      // @ts-ignore
+      (window as any)[counterKey] = ((window as any)[counterKey] || 1) - 1;
+      // Restore overflow only when no modals remain
+      // @ts-ignore
+      if (!(window as any)[counterKey]) {
+        try {
+          document.body.style.overflow = '';
+        } catch (e) {
+          /* ignore */
+        }
+        // @ts-ignore
+        delete (window as any)[counterKey];
+      }
     };
   }, [onClose]);
 
@@ -33,8 +52,13 @@ const FestivalDetailsModal: React.FC<{ festival?: Festival | null; open?: boolea
           <h3 className="text-lg font-semibold text-amber-900">{festival.name}</h3>
           <button onClick={onClose} aria-label="Close modal" className="text-slate-600 hover:text-slate-800">Close</button>
         </div>
-
-        
+        {/* Banner image: use festival.image or fallback to a related Unsplash image */}
+        <div
+          className="h-48 bg-cover bg-center"
+          style={{
+            backgroundImage: `url(${festival.image || "/Festival.jpeg"})`,
+          }}
+        />
 
         <div className="p-4">
           <div className="h-[60vh] overflow-auto">
