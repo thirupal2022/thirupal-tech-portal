@@ -170,3 +170,12 @@ body {
 }
 
 .fade-up { animation: fadeUp .6s ease both; }
+
+/* Clickable cursor for interactive elements and helpers */
+button, a[href], input[type="button"], input[type="submit"], .btn, .btn-primary, .nav-link, [role="button"], .clickable {
+  cursor: pointer;
+}
+
+.clickable {
+  cursor: pointer;
+}

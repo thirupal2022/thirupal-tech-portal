@@ -1,16 +1,19 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import type { Festival } from "../../data/festivals";
 
-const FestivalDetailsModal: React.FC<{ festival?: Festival | null; open?: boolean; onClose: () => void }> = ({ festival, open = false, onClose }) => {
+const FestivalDetailsModal: React.FC<{ festival?: Festival | null; open?: boolean; onClose: () => void; focusedProgramId?: string | undefined }> = ({ festival, open = false, onClose, focusedProgramId }) => {
   if (!open || !festival) return null;
+
+  const onCloseRef = useRef(onClose);
+  useEffect(() => {
+    onCloseRef.current = onClose;
+  }, [onClose]);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
+      if (e.key === "Escape") onCloseRef.current();
     };
 
-    // Robust body-scroll lock: keep a global counter so nested/rapid mounts
-    // don't permanently prevent scrolling.
     const counterKey = '__modalOpenCount';
     // @ts-ignore
     (window as any)[counterKey] = ((window as any)[counterKey] || 0) + 1;
@@ -35,11 +38,13 @@ const FestivalDetailsModal: React.FC<{ festival?: Festival | null; open?: boolea
         delete (window as any)[counterKey];
       }
     };
-  }, [onClose]);
+    // mount once
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      <div className="absolute inset-0 bg-black/50" onClick={onClose} />
+      <div className="absolute inset-0 bg-black/50 clickable" onClick={onClose} />
 
       <div
         className="relative max-w-3xl w-full bg-white rounded-lg shadow-lg overflow-hidden"
@@ -70,20 +75,83 @@ const FestivalDetailsModal: React.FC<{ festival?: Festival | null; open?: boolea
               <p className="mt-3 text-sm text-slate-700">{festival.description}</p>
             )}
 
-            {festival.programs && festival.programs.length > 0 && (
-              <div className="mt-4">
-                <h4 className="font-semibold text-amber-800">Full program</h4>
-                <ul className="mt-2 list-disc ml-5 text-sm text-slate-700">
-                  {festival.programs.map((p) => (
-                    <li key={p.id} className="mb-1">
-                      {p.time && <span className="text-slate-500 mr-2">{p.time}</span>}
-                      <span>{p.name}</span>
-                      {p.description && <div className="text-xs text-slate-500">{p.description}</div>}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
+              {/* If a specific program is focused, show its detailed info up-front */}
+              {focusedProgramId && festival.programs && (
+                (() => {
+                  const focused = festival.programs?.find((pp) => pp.id === focusedProgramId);
+                  if (!focused) return null;
+                  return (
+                    <div className="mt-4 p-3 border rounded bg-amber-50">
+                      <div className="text-sm text-amber-900 font-semibold">{focused.name} — {festival.name}</div>
+                      <div className="text-xs text-slate-600 mt-1">{focused.time || ''} {focused.category ? `• ${focused.category}` : ''}</div>
+                      {focused.description && <div className="mt-2 text-sm text-slate-700">{focused.description}</div>}
+                    </div>
+                  );
+                })()
+              )}
+
+                {festival.programs && festival.programs.length > 0 && (
+                  <div className="mt-4">
+                    <h4 className="font-semibold text-amber-800">Agenda (by date)</h4>
+                    <div className="mt-2 text-sm text-slate-700">
+                      {(() => {
+                        // Group programs by day label like "Day 1" or fallback to category
+                        const programs = festival.programs || [];
+
+                        // Try to compute a base date from festival.isoDate
+                        const baseDate = festival.isoDate ? new Date(festival.isoDate) : null;
+
+                        const groups: Record<string, typeof programs> = {};
+
+                        programs.forEach((p, idx) => {
+                          const cat = (p.category || '').trim();
+                          const m = cat.match(/Day\s*(\d+)/i);
+                          const key = m ? `Day ${m[1]}` : (cat || `Day ${Math.floor(idx / 6) + 1}`);
+                          if (!groups[key]) groups[key] = [];
+                          groups[key].push(p);
+                        });
+
+                        const dayKeys = Object.keys(groups).sort((a, b) => {
+                          const ma = a.match(/Day\s*(\d+)/i);
+                          const mb = b.match(/Day\s*(\d+)/i);
+                          if (ma && mb) return Number(ma[1]) - Number(mb[1]);
+                          return a.localeCompare(b);
+                        });
+
+                        return dayKeys.map((dayKey) => {
+                          // compute readable date for this day
+                          let dateLabel = dayKey;
+                          if (baseDate) {
+                            const m = dayKey.match(/Day\s*(\d+)/i);
+                            if (m) {
+                              const dayIndex = Number(m[1]) - 1;
+                              const d = new Date(baseDate);
+                              d.setDate(d.getDate() + dayIndex);
+                              dateLabel = d.toLocaleDateString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+                            }
+                          }
+
+                          return (
+                            <div key={dayKey} className="mb-4">
+                              <div className="text-sm font-medium text-amber-900 mb-2">{dateLabel}</div>
+                              <ul className="list-none ml-0">
+                                {groups[dayKey].map((p) => (
+                                  <li key={p.id} className="mb-2 flex items-start">
+                                    <div className="w-28 text-slate-500 text-xs">{p.time || ''}</div>
+                                    <div>
+                                      <div className="font-semibold text-slate-800">{p.name}</div>
+                                      {p.description && <div className="text-xs text-slate-500">{p.description}</div>}
+                                    </div>
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                          );
+                        });
+                      })()}
+                    </div>
+                  </div>
+                )}
           </div>
         </div>
       </div>

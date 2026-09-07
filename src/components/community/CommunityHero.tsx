@@ -1,6 +1,6 @@
 import React from "react";
 
-const CommunityHero: React.FC<{ onScrollToFestivals?: () => void }> = ({ onScrollToFestivals }) => {
+const CommunityHero: React.FC<{ onScrollToFestivals?: () => void; onExploreEvents?: () => void }> = ({ onScrollToFestivals, onExploreEvents }) => {
   return (
     <section className="relative bg-gradient-to-br from-yellow-50 via-amber-100 to-rose-50 rounded-lg overflow-hidden shadow-sm">
       <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1506804884364-14d87ff5a0e2?q=80&w=1600&auto=format&fit=crop&s=example')] bg-cover bg-center opacity-60"></div>
@@ -14,9 +14,12 @@ const CommunityHero: React.FC<{ onScrollToFestivals?: () => void }> = ({ onScrol
           >
             Upcoming Festivals
           </button>
-          <a href="#events" className="bg-white border border-amber-700 text-amber-800 px-4 py-2 rounded-md shadow-sm">
+          <button
+            onClick={() => onExploreEvents ? onExploreEvents() : window.location.hash = '#events'}
+            className="bg-white border border-amber-700 text-amber-800 px-4 py-2 rounded-md shadow-sm"
+          >
             Explore Events
-          </a>
+          </button>
         </div>
       </div>
     </section>
