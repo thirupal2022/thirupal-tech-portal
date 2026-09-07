@@ -2,8 +2,6 @@ import React, { useEffect, useRef } from "react";
 import QuizModule from "./QuizModule";
 
 const QuizModal: React.FC<{ open: boolean; onClose: () => void }> = ({ open, onClose }) => {
-  if (!open) return null;
-
   const onCloseRef = useRef(onClose);
 
   useEffect(() => {
@@ -11,28 +9,34 @@ const QuizModal: React.FC<{ open: boolean; onClose: () => void }> = ({ open, onC
   }, [onClose]);
 
   useEffect(() => {
+    if (!open) return;
+
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") onCloseRef.current();
     };
 
     const counterKey = "__modalOpenCount";
+    const currentCount = Number((window as any)[counterKey] || 0);
     // @ts-ignore
-    (window as any)[counterKey] = ((window as any)[counterKey] || 0) + 1;
+    (window as any)[counterKey] = currentCount + 1;
     // @ts-ignore
     if ((window as any)[counterKey] === 1) document.body.style.overflow = "hidden";
 
     window.addEventListener("keydown", handleKeyDown);
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
+      const remainingCount = Number((window as any)[counterKey] || 1) - 1;
       // @ts-ignore
-      (window as any)[counterKey] = ((window as any)[counterKey] || 1) - 1;
+      (window as any)[counterKey] = remainingCount;
       // @ts-ignore
-      if (!(window as any)[counterKey]) {
+      if (!remainingCount) {
         document.body.style.overflow = "";
         delete (window as any)[counterKey];
       }
     };
-  }, []);
+  }, [open]);
+
+  if (!open) return null;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6">

@@ -7,8 +7,6 @@ const ProgramDetailsModal: React.FC<{
   program?: ProgramItem | null;
   onClose: () => void;
 }> = ({ open, festival, program, onClose }) => {
-  if (!open || !program) return null;
-
   // Keep a ref to the latest onClose so the key handler effect can be
   // mounted once and still call the current handler without re-running.
   const onCloseRef = useRef(onClose);
@@ -17,24 +15,28 @@ const ProgramDetailsModal: React.FC<{
   }, [onClose]);
 
   useEffect(() => {
+    if (!open || !program) return;
+
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onCloseRef.current();
     };
 
     const counterKey = '__modalOpenCount';
+    const currentCount = Number((window as any)[counterKey] || 0);
     // @ts-ignore
-    (window as any)[counterKey] = ((window as any)[counterKey] || 0) + 1;
+    (window as any)[counterKey] = currentCount + 1;
     // @ts-ignore
     if ((window as any)[counterKey] === 1) document.body.style.overflow = 'hidden';
 
     document.addEventListener('keydown', onKey);
     return () => {
       document.removeEventListener('keydown', onKey);
+      const remainingCount = Number((window as any)[counterKey] || 1) - 1;
       // @ts-ignore
-      (window as any)[counterKey] = ((window as any)[counterKey] || 1) - 1;
+      (window as any)[counterKey] = remainingCount;
       // Restore overflow only when no modals remain
       // @ts-ignore
-      if (!(window as any)[counterKey]) {
+      if (!remainingCount) {
         try {
           document.body.style.overflow = '';
         } catch (e) {
@@ -44,9 +46,9 @@ const ProgramDetailsModal: React.FC<{
         delete (window as any)[counterKey];
       }
     };
-    // mount once
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [open, program]);
+
+  if (!open || !program) return null;
 
   return (
     <div className="fixed inset-0 z-60 flex items-center justify-center p-4">

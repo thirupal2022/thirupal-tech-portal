@@ -2,21 +2,22 @@ import React, { useEffect, useRef } from "react";
 import type { Festival } from "../../data/festivals";
 
 const FestivalDetailsModal: React.FC<{ festival?: Festival | null; open?: boolean; onClose: () => void; focusedProgramId?: string | undefined }> = ({ festival, open = false, onClose, focusedProgramId }) => {
-  if (!open || !festival) return null;
-
   const onCloseRef = useRef(onClose);
   useEffect(() => {
     onCloseRef.current = onClose;
   }, [onClose]);
 
   useEffect(() => {
+    if (!open || !festival) return;
+
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") onCloseRef.current();
     };
 
     const counterKey = '__modalOpenCount';
+    const currentCount = Number((window as any)[counterKey] || 0);
     // @ts-ignore
-    (window as any)[counterKey] = ((window as any)[counterKey] || 0) + 1;
+    (window as any)[counterKey] = currentCount + 1;
     // Only set overflow hidden on the first modal
     // @ts-ignore
     if ((window as any)[counterKey] === 1) document.body.style.overflow = 'hidden';
@@ -24,11 +25,12 @@ const FestivalDetailsModal: React.FC<{ festival?: Festival | null; open?: boolea
     document.addEventListener("keydown", onKey);
     return () => {
       document.removeEventListener("keydown", onKey);
+      const remainingCount = Number((window as any)[counterKey] || 1) - 1;
       // @ts-ignore
-      (window as any)[counterKey] = ((window as any)[counterKey] || 1) - 1;
+      (window as any)[counterKey] = remainingCount;
       // Restore overflow only when no modals remain
       // @ts-ignore
-      if (!(window as any)[counterKey]) {
+      if (!remainingCount) {
         try {
           document.body.style.overflow = '';
         } catch (e) {
@@ -38,9 +40,9 @@ const FestivalDetailsModal: React.FC<{ festival?: Festival | null; open?: boolea
         delete (window as any)[counterKey];
       }
     };
-    // mount once
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [festival, open]);
+
+  if (!open || !festival) return null;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
