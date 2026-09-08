@@ -2,10 +2,15 @@ import React, { useEffect, useMemo, useState } from "react";
 import type { QuizSet } from "../../../data/quizData";
 import { QUIZ_AGE_GROUPS } from "../../../data/quizData";
 import { communityService } from "../../../services/communityService";
+import { REAL_QUIZ_PIN } from "./constants";
 
 const QuizModule: React.FC = () => {
   const [selectedAgeGroup, setSelectedAgeGroup] = useState<string>(QUIZ_AGE_GROUPS[0]);
   const [quizSet, setQuizSet] = useState<QuizSet | null>(null);
+  const [mode, setMode] = useState<"mock" | "real">("mock");
+  const [realAuthorized, setRealAuthorized] = useState<boolean>(false);
+  const [pinInput, setPinInput] = useState<string>("");
+  const [pinError, setPinError] = useState<string | null>(null);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(0);
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
   const [showExplanation, setShowExplanation] = useState<boolean>(false);
@@ -13,7 +18,14 @@ const QuizModule: React.FC = () => {
   const [isCompleted, setIsCompleted] = useState<boolean>(false);
 
   useEffect(() => {
-    communityService.getQuizByAgeGroup(selectedAgeGroup).then((sets) => {
+    // If Real mode is selected but not yet authorized, do not load real questions
+    if (mode === "real" && !realAuthorized) {
+      setQuizSet(null);
+      return;
+    }
+
+    const fetcher = mode === "real" ? communityService.getRealQuizByAgeGroup : communityService.getQuizByAgeGroup;
+    fetcher(selectedAgeGroup).then((sets) => {
       const nextSet = sets[0] ?? null;
       setQuizSet(nextSet);
       setCurrentQuestionIndex(0);
@@ -22,7 +34,7 @@ const QuizModule: React.FC = () => {
       setUserAnswers({});
       setIsCompleted(false);
     });
-  }, [selectedAgeGroup]);
+  }, [selectedAgeGroup, mode, realAuthorized]);
 
   const currentQuestion = quizSet?.questions[currentQuestionIndex];
 
@@ -73,6 +85,62 @@ const QuizModule: React.FC = () => {
   const isCorrect = selectedAnswer === currentQuestion?.answer;
 
   if (!quizSet) {
+    // If Real mode is selected and not yet authorized, show the PIN screen instead
+    if (mode === "real" && !realAuthorized) {
+      return (
+        <div className="rounded-3xl border border-amber-100 bg-white p-6 text-sm text-amber-800">
+          <p className="text-lg font-semibold text-slate-900">PIN required</p>
+          <p className="mt-2 text-sm text-slate-700">Enter the PIN to access the Real Quiz.</p>
+
+          <div className="mt-4 flex max-w-sm flex-col gap-2">
+            <input
+              aria-label="Quiz PIN"
+              value={pinInput}
+              onChange={(e) => setPinInput(e.target.value)}
+              type="password"
+              placeholder="Enter PIN"
+              className="rounded-md border border-slate-200 px-3 py-2 text-sm"
+            />
+            {pinError && <div className="text-sm text-rose-600">{pinError}</div>}
+
+            <div className="mt-2 flex gap-2">
+              <button
+                type="button"
+                onClick={() => {
+                  if (!pinInput) {
+                    setPinError("Please enter the PIN to continue.");
+                    return;
+                  }
+                  if (pinInput !== REAL_QUIZ_PIN) {
+                    setPinError("Incorrect PIN. Access denied.");
+                    return;
+                  }
+                  setPinError(null);
+                  setRealAuthorized(true);
+                }}
+                className="rounded-full bg-gradient-to-r from-emerald-500 via-teal-600 to-cyan-600 px-4 py-2 text-sm font-semibold text-white"
+              >
+                Validate PIN
+              </button>
+
+              <button
+                type="button"
+                onClick={() => {
+                  setMode("mock");
+                  setRealAuthorized(false);
+                  setPinInput("");
+                  setPinError(null);
+                }}
+                className="rounded-full bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-700"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
     return (
       <div className="rounded-3xl border border-amber-200 bg-amber-50 p-5 text-sm font-medium text-amber-800">
         Loading quiz questions…
@@ -171,6 +239,49 @@ const QuizModule: React.FC = () => {
 
   return (
     <div className="w-full">
+      <div className="mb-5 flex flex-wrap items-center gap-2">
+        <div className="flex gap-2">
+          <button
+            type="button"
+            onClick={() => {
+              setMode("mock");
+              setRealAuthorized(false);
+              setPinInput("");
+              setPinError(null);
+            }}
+            className={`rounded-full px-4 py-2 text-sm font-semibold transition ${
+              mode === "mock"
+                ? "bg-gradient-to-r from-amber-500 via-orange-500 to-rose-500 text-white shadow-lg shadow-amber-500/25"
+                : "bg-slate-100 text-slate-700 hover:bg-slate-200"
+            }`}
+          >
+            Mock Quiz
+          </button>
+
+          <button
+            type="button"
+            onClick={() => {
+              setMode("real");
+              // do not authorize automatically; show PIN screen
+              setRealAuthorized(false);
+              setPinInput("");
+              setPinError(null);
+            }}
+            className={`rounded-full px-4 py-2 text-sm font-semibold transition ${
+              mode === "real"
+                ? "bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 text-white shadow-lg"
+                : "bg-slate-100 text-slate-700 hover:bg-slate-200"
+            }`}
+          >
+            Start Quiz
+          </button>
+        </div>
+
+        <div className="ml-3 flex-1">
+          {/* keep age group buttons aligned to the right of the mode selector */}
+        </div>
+      </div>
+
       <div className="mb-5 flex flex-wrap gap-2">
         {QUIZ_AGE_GROUPS.map((ageGroup) => (
           <button
@@ -190,6 +301,60 @@ const QuizModule: React.FC = () => {
 
       <div className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
         <div className="rounded-[28px] border border-amber-100 bg-white p-5 shadow-[0_18px_50px_rgba(15,23,42,0.06)] sm:p-6">
+          {mode === "real" && !realAuthorized ? (
+            <div className="rounded-3xl border border-slate-200 bg-amber-50 p-6 text-sm text-amber-800">
+              <p className="text-lg font-semibold text-slate-900">PIN required</p>
+              <p className="mt-2 text-sm text-slate-700">Enter the PIN to access the Real Quiz.</p>
+
+              <div className="mt-4 flex max-w-sm flex-col gap-2">
+                <input
+                  aria-label="Quiz PIN"
+                  value={pinInput}
+                  onChange={(e) => setPinInput(e.target.value)}
+                  type="password"
+                  placeholder="Enter PIN"
+                  className="rounded-md border border-slate-200 px-3 py-2 text-sm"
+                />
+                {pinError && <div className="text-sm text-rose-600">{pinError}</div>}
+
+                <div className="mt-2 flex gap-2">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      // validate PIN
+                      if (!pinInput) {
+                        setPinError("Please enter the PIN to continue.");
+                        return;
+                      }
+                      if (pinInput !== REAL_QUIZ_PIN) {
+                        setPinError("Incorrect PIN. Access denied.");
+                        return;
+                      }
+                      setPinError(null);
+                      setRealAuthorized(true);
+                    }}
+                    className="rounded-full bg-gradient-to-r from-emerald-500 via-teal-600 to-cyan-600 px-4 py-2 text-sm font-semibold text-white"
+                  >
+                    Validate PIN
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      // cancel back to Mock
+                      setMode("mock");
+                      setRealAuthorized(false);
+                      setPinInput("");
+                      setPinError(null);
+                    }}
+                    className="rounded-full bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-700"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            </div>
+          ) : null}
           <div className="mb-5 flex items-center justify-between gap-3">
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.22em] text-slate-500">Age group</p>

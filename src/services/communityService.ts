@@ -1,5 +1,5 @@
 import FESTIVALS from "../data/festivals";
-import QUIZ_DATA from "../data/quizData";
+import QUIZ_DATA, { REAL_QUIZ_DATA } from "../data/quizData";
 import type { Festival } from "../data/festivals";
 import type { QuizSet } from "../data/quizData";
 
@@ -13,6 +13,9 @@ export const communityService = {
   },
   async getQuizByAgeGroup(ageGroup: string): Promise<QuizSet[]> {
     return new Promise((res) => setTimeout(() => res(QUIZ_DATA.filter((q) => q.ageGroup === ageGroup)), 150));
+  },
+  async getRealQuizByAgeGroup(ageGroup: string): Promise<QuizSet[]> {
+    return new Promise((res) => setTimeout(() => res(REAL_QUIZ_DATA.filter((q) => q.ageGroup === ageGroup)), 150));
   },
   async getQuizGroups(): Promise<string[]> {
     return new Promise((res) => setTimeout(() => res([...new Set(QUIZ_DATA.map((item) => item.ageGroup))]), 80));

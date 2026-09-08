@@ -327,3 +327,91 @@ export const QUIZ_DATA: QuizSet[] = [
 ];
 
 export default QUIZ_DATA;
+
+// Real quiz data (separate set of questions used after PIN validation)
+export const REAL_QUIZ_DATA: QuizSet[] = [
+  {
+    ageGroup: "4-10",
+    category: "real-challenge",
+    setId: 101,
+    questions: [
+      {
+        id: "r1-1",
+        question: "Which of these animals is known for long migrations over the ocean?",
+        options: ["Shark", "Whale", "Penguin", "Dolphin"],
+        answer: "Whale",
+        explanation: "Many whale species migrate long distances between feeding and breeding grounds."
+      },
+      {
+        id: "r1-2",
+        question: "What helps plants make food using sunlight?",
+        options: ["Photosynthesis", "Digestion", "Evaporation", "Condensation"],
+        answer: "Photosynthesis",
+        explanation: "Photosynthesis is the process plants use to convert sunlight into energy."
+      }
+    ]
+  },
+  {
+    ageGroup: "11-14",
+    category: "real-challenge",
+    setId: 102,
+    questions: [
+      {
+        id: "r2-1",
+        question: "Which gas do plants use to make food?",
+        options: ["Oxygen", "Carbon dioxide", "Nitrogen", "Helium"],
+        answer: "Carbon dioxide",
+        explanation: "Plants take in carbon dioxide during photosynthesis to produce sugars."
+      },
+      {
+        id: "r2-2",
+        question: "Which planet in our solar system is the largest?",
+        options: ["Earth", "Jupiter", "Mars", "Saturn"],
+        answer: "Jupiter",
+        explanation: "Jupiter is the largest planet in the solar system by mass and volume."
+      }
+    ]
+  },
+  {
+    ageGroup: "15-24",
+    category: "real-challenge",
+    setId: 103,
+    questions: [
+      {
+        id: "r3-1",
+        question: "If 2x + 3 = 11, what is x?",
+        options: ["3", "4", "5", "6"],
+        answer: "4",
+        explanation: "2x + 3 = 11 -> 2x = 8 -> x = 4."
+      },
+      {
+        id: "r3-2",
+        question: "Which language is primarily used for styling web pages?",
+        options: ["JavaScript", "HTML", "CSS", "Python"],
+        answer: "CSS",
+        explanation: "CSS controls the presentation and layout of HTML documents."
+      }
+    ]
+  },
+  {
+    ageGroup: "25+",
+    category: "real-challenge",
+    setId: 104,
+    questions: [
+      {
+        id: "r4-1",
+        question: "Which practice supports long-term mental well-being?",
+        options: ["Chronic stress", "Regular rest", "Overworking", "Isolation"],
+        answer: "Regular rest",
+        explanation: "Regular rest and self-care support mental health and resilience."
+      },
+      {
+        id: "r4-2",
+        question: "What is a key benefit of clear communication in teams?",
+        options: ["Confusion", "Alignment", "Delay", "Silence"],
+        answer: "Alignment",
+        explanation: "Clear communication helps team members align on goals and reduces misunderstandings."
+      }
+    ]
+  }
+];
