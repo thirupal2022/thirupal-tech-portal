@@ -40,17 +40,17 @@ export const FESTIVALS: Festival[] = [
     endTime: "23:30",
     programs: [
       { id: "d1-1", name: "Pooja (Installation & Evening Puja)", category: "Day 1", time: "6:30–7:30 PM", description: "Village Mandapam" },
-      { id: "d1-2", name: "Annadanam — Prasadam Distribution", category: "Day 1", time: "7:30–9:00 PM" },
-      { id: "d1-3", name: "Chekkala Bajana (Traditional singing)", category: "Day 1", time: "8:00–11:00 PM" },
+      { id: "d1-2", name: "Annadanam — Prasadam Distribution", category: "Day 1", time: "7:30–9:00 PM", description: "Distribution of blessed food to the community" },
+      { id: "d1-3", name: "Chekkala Bajana (Traditional singing)", category: "Day 1", time: "8:00–11:00 PM", description: "Traditional songs and folk music performances" },
 
-      { id: "d2-1", name: "Rangoli Competition", category: "Day 2", time: "8:00–9:00 AM" },
-      { id: "d2-2", name: "Youth Programs (fitness, sports)", category: "Day 2", time: "9:30–12:30 PM" },
-      { id: "d2-3", name: "Kids' Sports Competition", category: "Day 2", time: "2:00–3:30 PM" },
-      { id: "d2-4", name: "Cultural Events & Group Dance", category: "Day 2", time: "4:30–8:30 PM" },
-      { id: "d2-5", name: "Group Dance Performance", category: "Day 2", time: "9:30–11:30 PM" },
+      { id: "d2-1", name: "Rangoli Competition", category: "Day 2", time: "8:00–9:00 AM", description: "A Rangoli competition is a vibrant cultural event where participants create intricate floor patterns using colored powders, rice flour, flower petals, and natural sand" },
+      { id: "d2-2", name: "Youth Programs (fitness, sports)", category: "Day 2", time: "9:30–12:30 PM", description: "Physical fitness and sports activities for young people" },
+      { id: "d2-3", name: "Kids' Sports Competition", category: "Day 2", time: "2:00–3:30 PM", description: "Sports events and competitions for children" },
+      { id: "d2-4", name: "Cultural Events & Group Dance", category: "Day 2", time: "4:30–8:30 PM", description: "Cultural events and group dance performances" },
+      { id: "d2-5", name: "Group Dance Performance", category: "Day 2", time: "9:30–11:30 PM", description: "Group dance performances" },
 
-      { id: "d3-1", name: "Kids' Games & Otti Kotuta", category: "Day 3", time: "9:30–11:30 AM" },
-      { id: "d3-2", name: "Elder Games & Musical Chairs", category: "Day 3", time: "2:30–4:30 PM" },
+      { id: "d3-1", name: "Kids' Games & Otti Kotuta", category: "Day 3", time: "9:30–11:30 AM", description: "Games and activities for children" },
+      { id: "d3-2", name: "Elder Games & Musical Chairs", category: "Day 3", time: "2:30–4:30 PM", description: "Games and activities for elders" },
       { id: "d3-3", name: "Nimarjanam (Procession & Immersion)", category: "Day 3", time: "5:30–11:30 PM", description: "Grand Procession with DJ & Sky Rockets" }
     ]
   }

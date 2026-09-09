@@ -83,19 +83,10 @@ const ProgramDetailsModal: React.FC<{
             <span>{program.category || ""}</span>
           </div>
 
-          {program.description ? (
-            <div className="mb-5 text-sm leading-6 text-slate-700">{program.description}</div>
-          ) : (
-            <div className="mb-5 text-sm text-slate-600">No additional details provided.</div>
-          )}
-
           {festival && (
             <div className="rounded-[24px] border border-slate-200 bg-slate-50 p-4">
-              <div className="mb-2 text-sm font-semibold uppercase tracking-[0.2em] text-slate-500">Festival details</div>
               <div className="space-y-1 text-sm text-slate-700">
-                <div>{festival.date} • {festival.location}</div>
-                {festival.venue && <div>Venue: {festival.venue}</div>}
-                {festival.contact && <div>Contact: {festival.contact}</div>}
+                <div>{program.description}</div>
               </div>
             </div>
           )}
@@ -104,13 +95,7 @@ const ProgramDetailsModal: React.FC<{
             <button className="inline-flex items-center justify-center rounded-full bg-gradient-to-r from-amber-500 via-orange-500 to-rose-500 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-amber-500/20 transition hover:-translate-y-0.5">
               Register
             </button>
-            <button
-              type="button"
-              onClick={onClose}
-              className="rounded-full border border-slate-200 bg-white px-5 py-2.5 text-sm font-medium text-slate-600 transition hover:border-slate-300 hover:text-slate-900"
-            >
-              Close
-            </button>
+            
           </div>
         </div>
       </div>
