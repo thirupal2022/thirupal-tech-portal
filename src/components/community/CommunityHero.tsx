@@ -1,13 +1,7 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
 
-const CommunityHero: React.FC<{ onScrollToFestivals?: () => void; onExploreEvents?: () => void; onBack?: () => void }> = ({ onScrollToFestivals, onExploreEvents, onBack }) => {
-  const navigate = useNavigate();
-  const handleBack = () => {
-    if (onBack) return onBack();
-    navigate('/community');
-  };
-
+const CommunityHero: React.FC<{ onScrollToFestivals?: () => void; onExploreEvents?: () => void; }> = ({ onScrollToFestivals, onExploreEvents }) => {
+  
   return (
     <section className="relative bg-gradient-to-br from-yellow-50 via-amber-100 to-rose-50 rounded-lg overflow-hidden shadow-sm">
       <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1506804884364-14d87ff5a0e2?q=80&w=1600&auto=format&fit=crop&s=example')] bg-cover bg-center opacity-60"></div>

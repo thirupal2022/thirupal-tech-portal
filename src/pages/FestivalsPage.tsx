@@ -60,7 +60,7 @@ const FestivalsPage: React.FC = () => {
         <span>Festivals</span>
       </div>
 
-      <CommunityHero onScrollToFestivals={scrollToFestivals} onExploreEvents={openExplorer} onBack={() => navigate('/community')} />
+      <CommunityHero onScrollToFestivals={scrollToFestivals} onExploreEvents={openExplorer} />
 
       <div ref={festivalsRef} className="mt-8">
         <UpcomingFestivals onSelectFestival={onSelectFestival} onExploreQuiz={() => setQuizOpen(true)} />
