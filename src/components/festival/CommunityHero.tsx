@@ -1,5 +1,5 @@
 import React from "react";
-import { ArrowLeft, Sparkles } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import festivalBanner from "../../assets/festival_banner.png";
 
@@ -28,21 +28,20 @@ const CommunityHero: React.FC<{ onScrollToFestivals?: () => void; onExploreEvent
           className="h-full w-full object-cover"
         />
 
-        <div className="absolute inset-y-0 left-0 z-10 flex max-w-[52%] items-center px-5 pb-5 pt-4 md:px-7 md:pb-7 md:pt-5">
-          <div className="max-w-[520px]">
-            
-            <div className="mt-6 flex flex-wrap gap-3">
+        <div className="absolute inset-0 z-10 flex items-end px-5 pb-5 pt-16 md:items-center md:px-7 md:pb-7 md:pt-5">
+          <div className="w-full max-w-full md:max-w-[52%]">
+            <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
               <button
                 type="button"
                 onClick={onScrollToFestivals}
-                className="rounded-full bg-[#1f8a63] px-5 py-2.5 text-sm font-semibold text-white shadow-[0_12px_24px_rgba(31,138,99,0.2)] transition hover:bg-[#177454]"
+                className="w-full rounded-full bg-[#1f8a63] px-5 py-2.5 text-sm font-semibold text-white shadow-[0_12px_24px_rgba(31,138,99,0.2)] transition hover:bg-[#177454] sm:w-auto"
               >
                 Upcoming Festivals
               </button>
               <button
                 type="button"
                 onClick={() => (onExploreEvents ? onExploreEvents() : (window.location.hash = '#events'))}
-                className="rounded-full border border-[#d4e7d7] bg-white/70 px-5 py-2.5 text-sm font-semibold text-[#2a5f4c] transition hover:bg-white"
+                className="w-full rounded-full border border-[#d4e7d7] bg-white/70 px-5 py-2.5 text-sm font-semibold text-[#2a5f4c] transition hover:bg-white sm:w-auto"
               >
                 Explore Events
               </button>
@@ -50,7 +49,7 @@ const CommunityHero: React.FC<{ onScrollToFestivals?: () => void; onExploreEvent
           </div>
         </div>
 
-        <div className="absolute bottom-4 right-4 z-20 max-w-[240px] rounded-2xl border border-[#d7e8dc] bg-[#edf9f1]/90 p-4 text-right shadow-lg backdrop-blur-sm">
+        <div className="absolute bottom-4 right-4 z-20 hidden max-w-[240px] rounded-2xl border border-[#d7e8dc] bg-[#edf9f1]/90 p-4 text-right shadow-lg backdrop-blur-sm md:block">
           <p className="text-sm font-medium leading-snug text-[#285445]">
             “Festivals are where traditions bloom and communities grow stronger together.”
           </p>

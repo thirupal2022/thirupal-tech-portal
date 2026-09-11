@@ -55,11 +55,7 @@ const FestivalsPage: React.FC = () => {
 
   return (
     <main className="mx-auto max-w-[1320px] px-4 py-6 md:px-6 lg:px-8">
-      <div className="mb-4 flex items-center gap-2 text-sm text-slate-600">
-        <button className="text-[#4f7a53] transition hover:underline" onClick={() => navigate('/community')}>Community</button>
-        <span>/</span>
-        <span className="font-medium text-slate-700">Festivals</span>
-      </div>
+      
 
       <CommunityHero onScrollToFestivals={scrollToFestivals} onExploreEvents={openExplorer} />
 
