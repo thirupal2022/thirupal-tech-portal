@@ -101,9 +101,9 @@ const EventsExplorer: React.FC<{
         aria-label="Explore Events"
         onClick={(event) => event.stopPropagation()}
       >
-        <div className="flex items-center justify-between border-b border-slate-200 bg-gradient-to-r from-amber-50 via-orange-50 to-emerald-50 px-5 py-4 sm:px-6">
+        <div className="flex items-center justify-between border-b border-slate-200 bg-gradient-to-r from-[#edf7ef] via-[#f5faf7] to-[#edfdf5] px-5 py-4 sm:px-6">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-amber-700">Community calendar</p>
+            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#2d6c51]">Community calendar</p>
             <h3 className="mt-1 text-xl font-bold text-slate-900 sm:text-2xl">Explore Events</h3>
           </div>
           <button
@@ -124,11 +124,11 @@ const EventsExplorer: React.FC<{
               <div className="mt-4 space-y-4 text-sm text-slate-700">
                 {dateKeys.map((dk) => (
                   <div key={dk} className="rounded-2xl border border-slate-200 bg-white p-3 sm:p-4">
-                    <div className="mb-3 text-sm font-semibold text-amber-900">{dk}</div>
+                    <div className="mb-3 text-sm font-semibold text-[#1d3d2d]">{dk}</div>
                     <ul className="space-y-3">
                       {dateMap[dk].map(({ festival, program }) => (
                         <li key={`${festival.id}-${program.id}`} className="flex items-start gap-3 rounded-xl border border-slate-100 bg-slate-50 p-3">
-                          <div className="mt-1 h-2.5 w-2.5 rounded-full bg-amber-400" />
+                          <div className="mt-1 h-2.5 w-2.5 rounded-full bg-[#2b7a58]" />
                           <div className="min-w-0 flex-1">
                             <div className="font-semibold text-slate-800">
                               {program.name} <span className="text-xs font-medium text-slate-500">— {festival.name}</span>
@@ -139,7 +139,7 @@ const EventsExplorer: React.FC<{
                           <button
                             type="button"
                             onClick={() => onOpenProgram(festival.id, program.id)}
-                            className="ml-2 rounded-full border border-amber-200 bg-amber-50 px-2.5 py-1 text-xs font-semibold text-amber-700 transition hover:border-amber-300 hover:bg-amber-100"
+                            className="ml-2 rounded-full border border-[#d4e7d7] bg-[#edf7ef] px-2.5 py-1 text-xs font-semibold text-[#2c6f52] transition hover:border-[#cfe5d5] hover:bg-[#e6f7eb]"
                           >
                             Details
                           </button>

@@ -61,9 +61,9 @@ const ProgramDetailsModal: React.FC<{
         aria-label={program.name}
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex items-center justify-between border-b border-slate-200 bg-gradient-to-r from-amber-50 via-orange-50 to-emerald-50 px-5 py-4 sm:px-6">
+        <div className="flex items-center justify-between border-b border-slate-200 bg-gradient-to-r from-[#edf7ef] via-[#f5faf7] to-[#edfdf5] px-5 py-4 sm:px-6">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-amber-700">Program details</p>
+            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#2d6c51]">Program details</p>
             <h3 className="mt-1 text-xl font-bold text-slate-900 sm:text-2xl">{program.name}</h3>
             {festival && <div className="mt-1 text-sm text-slate-600">{festival.name}</div>}
           </div>
@@ -77,7 +77,7 @@ const ProgramDetailsModal: React.FC<{
         </div>
 
         <div className="p-4 sm:p-6">
-          <div className="mb-4 rounded-[24px] border border-amber-100 bg-amber-50/70 p-4 text-sm text-slate-600">
+          <div className="mb-4 rounded-[24px] border border-[#dfeae1] bg-[#edf7ef] p-4 text-sm text-slate-600">
             <span className="font-medium text-slate-700">{program.time || ""}</span>
             {program.time && program.category ? " • " : ""}
             <span>{program.category || ""}</span>
@@ -92,10 +92,9 @@ const ProgramDetailsModal: React.FC<{
           )}
 
           <div className="mt-6 flex flex-col gap-3 sm:flex-row">
-            <button className="inline-flex items-center justify-center rounded-full bg-gradient-to-r from-amber-500 via-orange-500 to-rose-500 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-amber-500/20 transition hover:-translate-y-0.5">
+            <button className="inline-flex items-center justify-center rounded-full bg-[#1f8a63] px-5 py-2.5 text-sm font-semibold text-white shadow-[0_10px_20px_rgba(31,138,99,0.18)] transition hover:bg-[#177454]">
               Register
             </button>
-            
           </div>
         </div>
       </div>

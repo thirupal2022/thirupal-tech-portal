@@ -99,31 +99,33 @@ body {
 
 /* Festival cards */
 .festival-card {
-  background: linear-gradient(180deg, rgba(255,255,255,0.85), rgba(255,250,245,0.9));
-  border-radius: 14px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.92), rgba(240,249,244,0.95));
+  border-radius: 24px;
   overflow: hidden;
-  box-shadow: 0 12px 30px rgba(15,23,42,0.06);
-  border: 1px solid rgba(15,23,42,0.04);
+  box-shadow: 0 18px 40px rgba(15,23,42,0.06);
+  border: 1px solid #dfeae1;
 }
 
 .festival-card .card-image {
-  height: 50rem;
+  height: 220px;
   background-size: cover;
   background-position: center;
 }
 
 .festival-card .card-body {
-  padding: 1rem 1rem 1.25rem 1rem;
+  padding: 1.2rem 1.2rem 1.4rem;
 }
 
 .festival-badge {
   display: inline-block;
-  padding: 0.25rem 0.6rem;
+  padding: 0.35rem 0.7rem;
   border-radius: 999px;
-  background: linear-gradient(90deg,var(--color-secondary), rgba(15,118,110,0.12));
+  background: linear-gradient(135deg, #1f8a63, #2d6c51);
   color: white;
-  font-weight: 600;
-  font-size: 0.75rem;
+  font-weight: 700;
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
 .chip {

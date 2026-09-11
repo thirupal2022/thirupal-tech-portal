@@ -55,9 +55,9 @@ const FestivalDetailsModal: React.FC<{ festival?: Festival | null; open?: boolea
         aria-label={festival.name}
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex items-center justify-between border-b border-slate-200 bg-gradient-to-r from-amber-50 via-orange-50 to-emerald-50 px-5 py-4 sm:px-6">
+        <div className="flex items-center justify-between border-b border-slate-200 bg-gradient-to-r from-[#edf7ef] via-[#f5faf7] to-[#edfdf5] px-5 py-4 sm:px-6">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-amber-700">Festival details</p>
+            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#2d6c51]">Festival details</p>
             <h3 className="mt-1 text-xl font-bold text-slate-900 sm:text-2xl">{festival.name}</h3>
           </div>
           <button
@@ -78,14 +78,14 @@ const FestivalDetailsModal: React.FC<{ festival?: Festival | null; open?: boolea
           />
 
           <div className="p-4 sm:p-6">
-            <div className="mb-5 flex flex-col gap-3 rounded-[24px] border border-amber-100 bg-amber-50/60 p-4 sm:flex-row sm:items-center sm:justify-between">
+            <div className="mb-5 flex flex-col gap-3 rounded-[24px] border border-[#dfeae1] bg-[#edf7ef] p-4 sm:flex-row sm:items-center sm:justify-between">
               <div className="space-y-1 text-sm text-slate-600">
                 <p className="font-medium text-slate-700">{festival.date} • {festival.location}</p>
                 {festival.venue && <p>Venue: {festival.venue}</p>}
                 {festival.contact && <p>Contact: {festival.contact}</p>}
               </div>
               {festival.venue && (
-                <span className="inline-flex w-fit rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-emerald-700">
+                <span className="inline-flex w-fit rounded-full bg-[#dff3e6] px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-[#2d6c51] ring-1 ring-[#cfe5d5]">
                   Community event
                 </span>
               )}
@@ -99,8 +99,8 @@ const FestivalDetailsModal: React.FC<{ festival?: Festival | null; open?: boolea
               const focused = festival.programs?.find((pp) => pp.id === focusedProgramId);
               if (!focused) return null;
               return (
-                <div className="mb-5 rounded-[24px] border border-amber-200 bg-amber-50 p-4">
-                  <div className="text-sm font-semibold text-amber-900">{focused.name} — {festival.name}</div>
+                <div className="mb-5 rounded-[24px] border border-[#d4e7d7] bg-[#f1faf3] p-4">
+                  <div className="text-sm font-semibold text-[#1d3d2d]">{focused.name} — {festival.name}</div>
                   <div className="mt-1 text-xs text-slate-600">{focused.time || ""} {focused.category ? `• ${focused.category}` : ""}</div>
                   {focused.description && <div className="mt-2 text-sm text-slate-700">{focused.description}</div>}
                 </div>
@@ -145,11 +145,11 @@ const FestivalDetailsModal: React.FC<{ festival?: Festival | null; open?: boolea
 
                       return (
                         <div key={dayKey} className="rounded-2xl border border-slate-200 bg-white p-3">
-                          <div className="mb-2 text-sm font-semibold text-amber-900">{dateLabel}</div>
+                          <div className="mb-2 text-sm font-semibold text-[#1d3d2d]">{dateLabel}</div>
                           <ul className="space-y-2">
                             {groups[dayKey].map((p) => (
                               <li key={p.id} className="flex items-start gap-3">
-                                <div className="mt-1 h-2.5 w-2.5 rounded-full bg-amber-400" />
+                                <div className="mt-1 h-2.5 w-2.5 rounded-full bg-[#2b7a58]" />
                                 <div className="flex-1">
                                   <div className="font-medium text-slate-800">{p.name}</div>
                                   <div className="text-xs text-slate-500">{p.time || ""}{p.time && p.category ? " • " : ""}{p.category || ""}</div>
