@@ -1,12 +1,13 @@
 import React, { useRef, useState } from "react";
-import CommunityHero from "../components/community/CommunityHero";
-import UpcomingFestivals from "../components/community/UpcomingFestivals";
-import FestivalDetailsModal from "../components/community/FestivalDetailsModal";
-import ProgramDetailsModal from "../components/community/ProgramDetailsModal";
+import { useNavigate } from "react-router-dom";
+
+import CommunityHero from "../components/festival/CommunityHero";
+import UpcomingFestivals from "../components/festival/UpcomingFestivals";
+import FestivalDetailsModal from "../components/festival/FestivalDetailsModal";
+import ProgramDetailsModal from "../components/festival/ProgramDetailsModal";
+import EventsExplorer from "../components/festival/EventsExplorer";
 import QuizModal from "../components/community/Quiz/QuizModal";
 import { communityService } from "../services/communityService";
-import EventsExplorer from "../components/community/EventsExplorer";
-import { useNavigate } from "react-router-dom";
 
 const FestivalsPage: React.FC = () => {
   const festivalsRef = useRef<HTMLDivElement | null>(null);
