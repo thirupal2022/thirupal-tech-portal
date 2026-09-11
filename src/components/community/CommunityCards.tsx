@@ -1,14 +1,18 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import AnnouncementBadge from "../common/AnnouncementBadge";
 
 const CommunityCards: React.FC<{ onShowHero?: () => void }> = ({ onShowHero }) => {
   const navigate = useNavigate();
   return (
-    <section className="max-w-5xl mx-auto px-6 py-12">
+    <section className="max-w-5xl mx-auto px-6 py-8">
 
         
         
-        <h2 className="text-2xl pt-5 font-semibold mb-4">Community</h2>
+        <div className="flex items-center justify-between">
+            <h2 className="text-2xl pt-5 font-semibold mb-4">Community</h2>
+        </div>
+
         <div className="mt-6 space-y-6">
             <section className="p-6 rounded-2xl border bg-white shadow-sm hover:bg-amber-50 hover:shadow-lg transition-colors duration-200">
                 <div className="flex items-center gap-4  cursor-pointer" onClick={() => navigate('/community/agriculture')}>
@@ -34,7 +38,12 @@ const CommunityCards: React.FC<{ onShowHero?: () => void }> = ({ onShowHero }) =
                 </div>
             </section>
 
-            <section className="p-6 rounded-2xl border bg-white shadow-sm hover:bg-rose-50 hover:shadow-lg transition-colors duration-200">
+            <section className="p-6 rounded-2xl border bg-white shadow-sm hover:bg-rose-50 hover:shadow-lg transition-colors duration-200 relative">
+                <AnnouncementBadge
+                    onClick={() => { if (onShowHero) { onShowHero(); } else { navigate('/community/festivals'); } }}
+                    className="absolute right-4 top-4"
+                    ariaLabel="New Update - open festivals"
+                />
                 <div className="flex items-center gap-4 cursor-pointer" onClick={() => { if (onShowHero) { onShowHero(); } else { navigate('/community/festivals'); } }}>
                     <div className="flex items-center gap-4">
                         <div className="text-2xl">🎉</div>
