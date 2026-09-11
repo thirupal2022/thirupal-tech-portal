@@ -1,10 +1,11 @@
 import { useState } from "react";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useLocation } from "react-router-dom";
 import { Menu, X } from "lucide-react";
 import ThemeToggle from "../common/ThemeToggle";
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
+  const location = useLocation();
 
   const links = [
     { label: "Home", path: "/" },
@@ -74,6 +75,17 @@ export default function Navbar() {
                 {link.label}
               </NavLink>
             ))}
+
+            {/* Breadcrumb for Community > Festivals */}
+            {
+              (location.pathname === '/community/festivals' || location.pathname.endsWith('/community/festivals')) && (
+                <div className="text-sm text-slate-600 flex items-center gap-2">
+                  <Link to="/community" className="text-amber-700 hover:underline">Community</Link>
+                  <span>/</span>
+                  <span>Festivals</span>
+                </div>
+              )
+            }
 
             <ThemeToggle />
           </nav>
