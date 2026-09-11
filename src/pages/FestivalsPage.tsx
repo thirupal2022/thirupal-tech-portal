@@ -1,5 +1,4 @@
 import React, { useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
 
 import CommunityHero from "../components/festival/CommunityHero";
 import UpcomingFestivals from "../components/festival/UpcomingFestivals";
@@ -20,7 +19,6 @@ const FestivalsPage: React.FC = () => {
   const [programModalOpen, setProgramModalOpen] = useState(false);
   const [programFestival, setProgramFestival] = useState<any | undefined>(undefined);
   const [programData, setProgramData] = useState<any | undefined>(undefined);
-  const navigate = useNavigate();
 
   const scrollToFestivals = () => {
     festivalsRef.current?.scrollIntoView({ behavior: "smooth" });
