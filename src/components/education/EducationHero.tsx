@@ -27,30 +27,7 @@ export default function EducationHero() {
           alt="A student and parent learning together in a community school"
           className="h-full w-full object-cover"
         />
-
-        <div className="absolute inset-0 bg-gradient-to-r from-[#edf4ee]/95 via-[#edf4ee]/65 to-transparent" />
-
-        <div className="absolute inset-y-0 left-0 z-10 flex max-w-[52%] items-center px-5 pb-5 pt-4 md:px-7 md:pb-7 md:pt-5">
-          <div className="max-w-[520px]">
-            <h1 className="text-4xl font-extrabold tracking-[-0.04em] text-[#1d3d2d] md:text-6xl">
-              Education
-            </h1>
-
-            <div className="mt-4 flex flex-wrap gap-3 text-base font-medium text-[#2d5a47] md:text-xl">
-              <span>Learn</span>
-              <span className="text-slate-400">•</span>
-              <span>Explore</span>
-              <span className="text-slate-400">•</span>
-              <span>Grow</span>
-              <span className="text-slate-400">•</span>
-              <span>Share</span>
-            </div>
-
-            <p className="mt-5 max-w-xl text-base leading-relaxed text-[#355c4b] md:text-lg">
-              Empowering our community through quality education, digital skills and opportunities for a brighter future.
-            </p>
-          </div>
-        </div>
+        
 
         <div className="absolute bottom-4 right-4 z-20 max-w-[240px] rounded-2xl border border-[#d7e8dc] bg-[#edf9f1]/90 p-4 text-right shadow-lg backdrop-blur-sm">
           <Quote className="ml-auto mb-2 h-4 w-4 text-[#2c6f4f]" />

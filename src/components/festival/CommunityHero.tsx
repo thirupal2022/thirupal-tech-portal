@@ -1,9 +1,7 @@
 import React from "react";
 import { ArrowLeft, Sparkles } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-
-const festivalBanner =
-  "https://images.unsplash.com/photo-1506804884364-14d87ff5a0e2?q=80&w=1600&auto=format&fit=crop";
+import festivalBanner from "../../assets/festival_banner.png";
 
 const CommunityHero: React.FC<{ onScrollToFestivals?: () => void; onExploreEvents?: () => void; }> = ({ onScrollToFestivals, onExploreEvents }) => {
   const navigate = useNavigate();
@@ -30,33 +28,9 @@ const CommunityHero: React.FC<{ onScrollToFestivals?: () => void; onExploreEvent
           className="h-full w-full object-cover"
         />
 
-        <div className="absolute inset-0 bg-gradient-to-r from-[#edf4ee]/95 via-[#edf4ee]/70 to-transparent" />
-
         <div className="absolute inset-y-0 left-0 z-10 flex max-w-[52%] items-center px-5 pb-5 pt-4 md:px-7 md:pb-7 md:pt-5">
           <div className="max-w-[520px]">
-            <div className="inline-flex items-center gap-2 rounded-full border border-[#d6e7d9] bg-white/60 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-[#2d6c51] backdrop-blur-sm">
-              <Sparkles className="h-3.5 w-3.5" />
-              Community celebrations
-            </div>
-
-            <h1 className="mt-4 text-4xl font-extrabold tracking-[-0.04em] text-[#1d3d2d] md:text-6xl">
-              Festivals
-            </h1>
-
-            <div className="mt-4 flex flex-wrap gap-3 text-base font-medium text-[#2d5a47] md:text-xl">
-              <span>Celebrate</span>
-              <span className="text-slate-400">•</span>
-              <span>Connect</span>
-              <span className="text-slate-400">•</span>
-              <span>Inspire</span>
-              <span className="text-slate-400">•</span>
-              <span>Remember</span>
-            </div>
-
-            <p className="mt-5 max-w-xl text-base leading-relaxed text-[#355c4b] md:text-lg">
-              From harvest traditions to cultural gatherings, our festivals bring families, friends and the whole community together in joyful celebration.
-            </p>
-
+            
             <div className="mt-6 flex flex-wrap gap-3">
               <button
                 type="button"
